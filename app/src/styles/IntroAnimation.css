@@ -1,0 +1,459 @@
+html.intro-open,
+html.intro-open body {
+    background: #06130c;
+}
+
+.intro-animation {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 46%, rgba(53, 138, 73, .72) 0%, rgba(18, 77, 43, .78) 28%, transparent 54%),
+        linear-gradient(135deg, #07160d 0%, #0c2a1a 48%, #06130c 100%);
+    color: #fff;
+    transform: translateZ(0);
+    will-change: opacity;
+}
+
+/* Fade up from the page colour instead of animating a full-screen brightness
+   filter, which is expensive to repaint on large displays. */
+.intro-curtain {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+    background: #030d07;
+    animation: intro-curtain-in .95s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+.intro-animation.is-leaving {
+    animation: intro-screen-out .45s cubic-bezier(.4, 0, .2, 1) both;
+    pointer-events: none;
+}
+
+.intro-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+    box-shadow: inset 0 0 180px 55px rgba(0, 8, 3, .82);
+}
+
+.intro-glow {
+    position: absolute;
+    width: min(760px, 72vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    z-index: 2;
+    background: radial-gradient(circle, rgba(255, 235, 158, .28), rgba(211, 196, 98, .12) 30%, rgba(38, 123, 66, .16) 48%, transparent 70%);
+    filter: blur(12px);
+    animation: intro-glow-in 2.3s ease .45s both, intro-glow-pulse 3s ease-in-out 2.2s infinite;
+}
+
+.intro-light-sweep {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    top: 50%;
+    width: min(780px, 82vw);
+    height: 160px;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(90deg, transparent 5%, rgba(255, 247, 190, .05) 38%, rgba(255, 244, 174, .42) 50%, rgba(255, 247, 190, .05) 62%, transparent 95%);
+    filter: blur(16px);
+    mix-blend-mode: screen;
+    animation: intro-light-sweep 4.2s ease-in-out 1.15s infinite;
+}
+
+.intro-star-light {
+    position: absolute;
+    z-index: 4;
+    width: 6px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+    background: #fffbd0;
+    box-shadow: 0 0 8px 3px rgba(255, 226, 132, .82), 0 0 26px 8px rgba(255, 205, 82, .34);
+    animation: intro-star-pulse 2.8s ease-in-out infinite;
+}
+.intro-star-light--one { left: 22%; top: 31%; animation-delay: .2s; }
+.intro-star-light--two { right: 18%; top: 38%; animation-delay: 1.1s; }
+.intro-star-light--three { left: 68%; bottom: 24%; animation-delay: 1.8s; }
+
+.intro-light-bloom {
+    position: absolute;
+    z-index: 1;
+    width: 42vw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    filter: blur(18px);
+    mix-blend-mode: screen;
+    animation: intro-bloom-in 3.6s cubic-bezier(.2, .7, .2, 1) 1.4s forwards;
+}
+.intro-light-bloom--left {
+    left: -24vw;
+    top: -18vw;
+    background: radial-gradient(circle, rgba(255, 236, 155, .42), rgba(238, 207, 105, .1) 34%, transparent 68%);
+}
+.intro-light-bloom--right {
+    right: -28vw;
+    bottom: -20vw;
+    background: radial-gradient(circle, rgba(126, 225, 151, .22), rgba(42, 133, 78, .08) 38%, transparent 70%);
+}
+.intro-light-beams {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    opacity: 0;
+    mix-blend-mode: screen;
+    animation: intro-rays-in 1.8s ease .6s forwards, intro-beams-fade .6s ease 4.3s forwards;
+}
+.intro-light-beams span {
+    position: absolute;
+    top: -38%;
+    left: 12%;
+    width: 11%;
+    height: 150%;
+    transform-origin: 50% 0;
+    transform: rotate(28deg);
+    background: linear-gradient(90deg, transparent, rgba(255, 236, 168, .16), transparent);
+    filter: blur(10px);
+    animation: intro-beam-sway 8s ease-in-out infinite alternate;
+}
+.intro-light-beams span:nth-child(2) { left: 31%; width: 6%; transform: rotate(38deg); opacity: .7; animation-delay: -2s; }
+.intro-light-beams span:nth-child(3) { left: 68%; width: 14%; transform: rotate(-24deg); opacity: .55; animation-delay: -4s; }
+.intro-light-beams span:nth-child(4) { left: 82%; width: 7%; transform: rotate(-36deg); opacity: .42; animation-delay: -1s; }
+
+.intro-rays {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0;
+    animation: intro-rays-in 1.8s ease .35s forwards;
+}
+
+.intro-ray {
+    position: absolute;
+    left: -18%;
+    top: -48%;
+    width: 78vw;
+    height: 170vh;
+    transform-origin: top left;
+    background: linear-gradient(90deg, transparent 8%, rgba(255, 232, 150, .22) 48%, transparent 72%);
+    filter: blur(12px);
+    mix-blend-mode: screen;
+}
+
+.intro-ray--one { transform: rotate(31deg); }
+.intro-ray--two { left: 8%; top: -65%; transform: rotate(46deg) scale(.58); opacity: .75; }
+.intro-ray--three { left: 18%; top: -58%; transform: rotate(57deg) scale(.38); opacity: .5; }
+
+.intro-center {
+    position: relative;
+    z-index: 5;
+    width: min(620px, 84vw);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+}
+
+.intro-orbit {
+    position: absolute;
+    inset: 9%;
+    opacity: 0;
+    filter: drop-shadow(0 0 10px rgba(247, 217, 112, .46));
+    animation: intro-orbit-in 1.25s ease 1.15s forwards;
+}
+
+.intro-orbit svg {
+    width: 100%;
+    height: 100%;
+    animation: intro-orbit-spin 5.8s linear 1.15s infinite;
+}
+
+.intro-tracer {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #fff9bd;
+    box-shadow: 0 0 9px 3px rgba(255, 223, 114, .8);
+}
+
+.intro-tracer--one {
+    left: 6%;
+    top: 54%;
+    animation: intro-tracer-one 3.4s ease-in-out 1.6s infinite;
+}
+
+.intro-tracer--two {
+    right: 8%;
+    top: 36%;
+    animation: intro-tracer-two 4s ease-in-out 1.8s infinite;
+}
+
+.intro-logo-wrap {
+    position: relative;
+    width: min(520px, 76vw);
+    max-height: 62vh;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+    opacity: 0;
+    filter: drop-shadow(0 0 14px rgba(231, 197, 92, .18));
+    transform: scale(.75);
+    animation: intro-logo-reveal 1.3s cubic-bezier(.16, 1, .3, 1) .5s forwards;
+    view-transition-name: guinhawa-intro-logo;
+}
+
+/* A soft halo that keeps breathing behind the mark, so the centre of the
+   splash never looks like a still image while the feathers drift past. */
+.intro-logo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -6%;
+    z-index: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 230, 148, .2), rgba(74, 168, 100, .1) 42%, transparent 68%);
+    animation: intro-logo-halo 4.2s ease-in-out 1.5s infinite;
+}
+
+.intro-logo-wrap img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    animation: intro-logo-float 5.4s ease-in-out 1.6s infinite;
+}
+
+.intro-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    opacity: 0;
+    animation: intro-particles-in 1.15s ease .55s forwards, intro-particles-out .65s ease 4.3s forwards;
+}
+
+.intro-particles span {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff4aa;
+    box-shadow: 0 0 7px rgba(255, 226, 120, .9);
+    animation-name: intro-particle-float;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.intro-feather {
+    position: absolute;
+    z-index: 3;
+    width: calc(var(--feather-size) * 1.55);
+    height: calc(var(--feather-size) * 1.55 * 1.58);
+    filter: drop-shadow(0 0 15px rgba(255, 244, 174, .4));
+    opacity: 0;
+    animation-duration: var(--feather-duration);
+    animation-delay: var(--feather-delay);
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+    mix-blend-mode: screen;
+}
+
+.intro-feather img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    filter: brightness(1.4) contrast(1.2) drop-shadow(0 0 15px rgba(255, 244, 174, 0.8));
+    animation: intro-feather-glow 3s ease-in-out infinite alternate, intro-feather-shimmer 5s linear infinite;
+}
+
+@keyframes intro-feather-glow {
+    from { filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 244, 174, 0.5)); }
+    to { filter: brightness(1.6) drop-shadow(0 0 25px rgba(255, 244, 174, 1)); }
+}
+
+@keyframes intro-feather-shimmer {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; filter: brightness(1.8) contrast(1.3) drop-shadow(0 0 20px rgba(255, 244, 174, 1)); }
+    100% { opacity: 0.9; }
+}
+.intro-feather--one { left: 9%; top: -18%; animation-name: intro-feather-fall; }
+.intro-feather--two { left: 28%; top: -24%; animation-name: intro-feather-fall; }
+.intro-feather--three { left: 48%; top: -20%; animation-name: intro-feather-fall; }
+.intro-feather--four { left: 68%; top: -30%; animation-name: intro-feather-fall; }
+.intro-feather--five { left: 82%; top: -16%; animation-name: intro-feather-fall; }
+.intro-feather--six { left: 18%; top: -34%; animation-name: intro-feather-fall; }
+.intro-feather--seven { left: 38%; top: -28%; animation-name: intro-feather-fall; }
+.intro-feather--eight { left: 74%; top: -38%; animation-name: intro-feather-fall; }
+.intro-feather--nine { left: 58%; top: -32%; animation-name: intro-feather-fall; }
+.intro-feather--ten { left: 3%; top: -26%; animation-name: intro-feather-fall; }
+.intro-feather--eleven { left: 92%; top: -22%; animation-name: intro-feather-fall; }
+.intro-feather--twelve { left: 22%; top: -40%; animation-name: intro-feather-fall; }
+
+.intro-leaves {
+    position: absolute;
+    z-index: 2;
+    bottom: -8%;
+    width: 210px;
+    height: 260px;
+    opacity: 0;
+    filter: blur(.2px);
+    animation: intro-leaves-in 1.3s ease .7s forwards, intro-leaves-out .6s ease 4.3s forwards;
+}
+
+.intro-leaves--left { left: -25px; transform: rotate(-12deg); }
+.intro-leaves--right { right: -25px; transform: scaleX(-1) rotate(-12deg); }
+.intro-leaves span {
+    position: absolute;
+    bottom: 0;
+    left: 70px;
+    width: 54px;
+    height: 150px;
+    border-radius: 100% 0 100% 0;
+    transform-origin: bottom center;
+    background: linear-gradient(135deg, rgba(87, 132, 65, .5), rgba(17, 52, 29, .82));
+    box-shadow: inset 0 0 0 1px rgba(166, 187, 112, .08);
+}
+.intro-leaves span:nth-child(1) { transform: rotate(-38deg) scale(.8); }
+.intro-leaves span:nth-child(2) { transform: rotate(-12deg) scale(1.1); }
+.intro-leaves span:nth-child(3) { transform: rotate(22deg) scale(.72); }
+
+@keyframes intro-curtain-in {
+    0% { opacity: 1 }
+    100% { opacity: 0 }
+}
+@keyframes intro-screen-out {
+    0% { opacity: 1; transform: scale(1) }
+    100% { opacity: 0; transform: scale(1.035) }
+}
+@keyframes intro-bloom-in {
+    0% { opacity: 0; transform: scale(.55) }
+    100% { opacity: 1; transform: scale(1) }
+}
+@keyframes intro-beams-fade { to { opacity: 0 } }
+@keyframes intro-beam-sway {
+    from { transform: translate3d(-1vw, 0, 0) rotate(24deg); opacity: .35 }
+    to { transform: translate3d(2vw, 0, 0) rotate(34deg); opacity: .8 }
+}
+@keyframes intro-glow-in {
+    from { opacity: 0; transform: scale(.72) }
+    to { opacity: 1; transform: scale(1) }
+}
+@keyframes intro-glow-pulse {
+    0%, 100% { transform: scale(1); opacity: .75 }
+    50% { transform: scale(1.06); opacity: 1 }
+}
+@keyframes intro-rays-in { to { opacity: 1 } }
+/* Opacity + transform only: the old blurred reveal repainted a very large
+   drop-shadow every frame, which is what made the opening stutter. */
+@keyframes intro-logo-reveal {
+    0% { opacity: 0; transform: scale(.84) translateY(10px) }
+    72% { opacity: 1; transform: scale(1.012) translateY(0) }
+    100% { opacity: 1; transform: scale(1) translateY(0) }
+}
+@keyframes intro-logo-float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1) }
+    50% { transform: translate3d(0, -7px, 0) scale(1.012) }
+}
+@keyframes intro-logo-halo {
+    0%, 100% { opacity: .3; transform: scale(.97) }
+    50% { opacity: .62; transform: scale(1.035) }
+}
+@keyframes intro-light-sweep {
+    0% { transform: translate(-180%, -50%) rotate(-12deg); opacity: 0 }
+    18% { opacity: .75 }
+    52% { opacity: .95 }
+    100% { transform: translate(80%, -50%) rotate(-12deg); opacity: 0 }
+}
+@keyframes intro-star-pulse {
+    0%, 100% { transform: scale(.55); opacity: .25 }
+    50% { transform: scale(1.5); opacity: 1 }
+}
+@keyframes intro-orbit-in { from { opacity: 0; transform: scale(.88) } to { opacity: .92; transform: scale(1) } }
+@keyframes intro-orbit-spin { to { transform: rotate(360deg) } }
+@keyframes intro-tracer-one {
+    0%, 100% { transform: translate(0, 0) scale(.75); opacity: .35 }
+    50% { transform: translate(270px, -95px) scale(1.15); opacity: 1 }
+}
+@keyframes intro-tracer-two {
+    0%, 100% { transform: translate(0, 0) scale(.7); opacity: .4 }
+    50% { transform: translate(-250px, 125px) scale(1.2); opacity: 1 }
+}
+@keyframes intro-particles-in { to { opacity: 1 } }
+@keyframes intro-particles-out { to { opacity: 0 } }
+@keyframes intro-particle-float {
+    0% { transform: translate3d(0, 18px, 0) scale(.4); opacity: .15 }
+    35% { opacity: 1 }
+    70% { transform: translate3d(18px, -55px, 0) scale(1); opacity: .75 }
+    100% { transform: translate3d(-7px, -95px, 0) scale(.35); opacity: 0 }
+}
+@keyframes intro-feather-right {
+    0% { opacity: 0; transform: translate(-30px, 35px) rotate(-22deg) }
+    15% { opacity: .92 }
+    100% { opacity: 0; transform: translate(112vw, -30px) rotate(58deg) }
+}
+@keyframes intro-feather-left {
+    0% { opacity: 0; transform: translate(30px, 20px) rotate(20deg) }
+    15% { opacity: .88 }
+    100% { opacity: 0; transform: translate(-112vw, -80px) rotate(-50deg) }
+}
+@keyframes intro-feather-fall {
+    0% { opacity: 0; transform: translate(-20px, -20px) rotate(-12deg) }
+    12% { opacity: .9 }
+    40% { transform: translate(35px, 48vh) rotate(26deg) }
+    100% { opacity: 0; transform: translate(-18px, 105vh) rotate(-15deg) }
+}
+@keyframes intro-feather-rise {
+    0% { opacity: 0; transform: translate(-15px, 30px) rotate(-16deg) }
+    15% { opacity: .85 }
+    100% { opacity: 0; transform: translate(102vw, -38vh) rotate(48deg) }
+}
+
+
+@media (max-width: 760px) {
+    .intro-center { width: 94vw; }
+    .intro-logo-wrap { width: min(400px, 80vw); max-height: 50vh; }
+    .intro-glow { width: 90vw; }
+    .intro-feather {
+        transform-origin: center;
+        width: calc(var(--feather-size) * 1.2);
+        height: calc(var(--feather-size) * 1.2 * 1.58);
+    }
+    .intro-ray { width: 130vw; }
+    .intro-light-sweep { width: 100vw; height: 100px; }
+}
+
+@media (max-height: 560px) {
+    .intro-logo-wrap { width: min(300px, 50vh); }
+    .intro-center { width: min(400px, 70vh); }
+}
+
+.intro-animation.is-reduced * {
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intro-animation,
+    .intro-animation * {
+        animation-duration: .01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}

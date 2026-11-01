@@ -1,0 +1,3962 @@
+/**
+ * Small additions on top of styles/admin.css: the standalone error card the
+ * old PHP error_page() printed inline, plus a couple of resets for elements
+ * that changed tag (buttons instead of links/divs) in the React port.
+ */
+
+.error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 24px;
+    background: #f8fafc;
+    color: #0f172a;
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.error-card {
+    max-width: 28rem;
+    padding: 2.5rem;
+    text-align: center;
+    background: #fafcf8;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+}
+
+.error-card h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+}
+
+.error-card p {
+    margin: 0 0 1.5rem;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.error-card a {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.65rem;
+    background: #166534;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+:root[data-theme='dark'] .error-page {
+    background: #0d130f;
+    color: #e9efe9;
+}
+
+:root[data-theme='dark'] .error-card {
+    background: #141c16;
+    border-color: #26322a;
+}
+
+:root[data-theme='dark'] .error-card p {
+    color: #a3b0a7;
+}
+
+/* The POS product tiles are <button>s in React but were plain divs before. */
+.pos-product-card {
+    font: inherit;
+    color: inherit;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.pos-product-card:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.pos-complete:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Auth screens: the "back to role selection" link inside the sign-in card. */
+.login-note a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.login-note a:hover {
+    text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------
+   Login page (page 1) + Role Selection page (page 2).
+   One green canvas for both so the two screens feel like one flow.
+   ------------------------------------------------------------------ */
+
+:root {
+    --gp-green: #1d723c;
+    --gp-green-dark: #145c31;
+    --gp-green-deep: #0e3b22;
+    --gp-green-light: #2f9152;
+    --gp-cream: #f5faf3;
+    --gp-ink: #173a25;
+    --gp-muted: #5f7568;
+    --gp-amber: #d18a12;
+    --gp-amber-light: #f3b53f;
+    --gp-shadow: 0 28px 60px rgba(6, 32, 18, 0.34);
+}
+
+/* Fade between routes. Opacity only - a transform here would make every
+   position:fixed element inside the panel resolve against this box. */
+.route-transition {
+    animation: route-fade 0.28s ease both;
+}
+
+@keyframes route-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes gp-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+}
+
+.gp-auth {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 40px 20px;
+    overflow: hidden;
+    background:
+        radial-gradient(900px 520px at 12% -12%, rgba(255, 255, 255, 0.10), transparent 62%),
+        radial-gradient(760px 620px at 78% 50%, rgba(23, 90, 48, 0.45), transparent 70%),
+        linear-gradient(
+            90deg,
+            rgba(3, 18, 9, 0) 0%,
+            rgba(3, 18, 9, 0) 26%,
+            rgba(3, 22, 11, 0.28) 38%,
+            rgba(3, 26, 13, 0.82) 48%,
+            rgba(3, 24, 12, 0.94) 56%,
+            #042411 68%,
+            #031d0e 100%
+        ),
+        linear-gradient(180deg, rgba(2, 14, 8, 0.28) 0%, transparent 30%, transparent 68%, rgba(2, 14, 8, 0.4) 100%),
+        url('../assets/login-bg-hd.jpg') left center / cover no-repeat,
+        url('../assets/login-bg.jpg') left center / cover no-repeat,
+        url('../assets/login-bg.svg') center / cover no-repeat,
+        linear-gradient(155deg, var(--gp-green-deep) 0%, #17623a 46%, var(--gp-green-light) 100%);
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--gp-ink);
+}
+
+/* Leaf + rooster watermark overlay, pinned to the dark right panel. */
+.gp-auth::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url('../assets/login-deco.svg') right center / cover no-repeat;
+    pointer-events: none;
+}
+
+.gp-auth::after {
+    display: none;
+}
+
+/* Branding sits in the upper-left corner of the canvas, above the artwork. */
+.gp-auth .gp-brand {
+    position: absolute;
+    top: 42px;
+    left: clamp(24px, 4vw, 56px);
+    z-index: 3;
+}
+
+.gp-auth .gp-brand .gp-brand-name b {
+    color: #f4faf3;
+}
+
+.gp-auth .gp-brand .gp-brand-name small {
+    color: #b7e7c6;
+}
+
+/* Login screen: card floats on the dark green right panel. The block padding
+   is viewport-height aware so the card never pushes the page past the fold. */
+.gp-auth.gp-login-screen {
+    justify-items: end;
+    padding: clamp(18px, 3.5vh, 40px) clamp(24px, 9vw, 170px);
+}
+
+
+.gp-auth .login-theme-toggle {
+    position: absolute;
+    top: 26px;
+    right: 26px;
+    z-index: 4;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #d8f3e2 !important;
+    backdrop-filter: blur(6px);
+}
+
+.gp-auth .login-theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.24) !important;
+    color: #ffffff !important;
+}
+
+.gp-auth .login-theme-toggle.is-auto::after {
+    background: #7dffb4;
+    box-shadow: 0 0 0 2px rgba(14, 59, 34, 0.9);
+}
+
+/* ---- the sign-in card ---- */
+
+.gp-card {
+    width: min(480px, 100%);
+    padding: clamp(26px, 4.6vh, 44px) 44px clamp(20px, 3.2vh, 30px);
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 34px 80px rgba(2, 16, 8, 0.45);
+    animation: gp-rise 0.42s ease both;
+    position: relative;
+    z-index: 1;
+}
+
+
+.gp-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.gp-brand-mark {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, var(--gp-green-light), var(--gp-green-dark));
+    color: #ffffff;
+    font-size: 24px;
+    box-shadow: 0 12px 24px rgba(20, 92, 49, 0.35);
+    flex: none;
+}
+
+.gp-brand-mark i:last-child {
+    font-size: 13px;
+    margin-left: -8px;
+    margin-top: 12px;
+    color: #d5f3a8;
+}
+
+.gp-brand-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.gp-brand-name b {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: var(--gp-ink);
+}
+
+.gp-brand-name small {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    color: var(--gp-green-light);
+}
+
+.gp-title {
+    margin: 26px 0 6px;
+    font: 600 clamp(30px, 6vw, 36px) / 1.15 'Fraunces', serif;
+    color: var(--gp-ink);
+}
+
+.gp-sub {
+    margin: 0 0 26px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gp-muted);
+}
+
+/* ---- card branding: logo on top, big wordmark beneath ---- */
+
+.gp-card-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.gp-card-logo {
+    width: clamp(64px, 8.6vh, 92px);
+    height: clamp(64px, 8.6vh, 92px);
+    object-fit: contain;
+    display: block;
+}
+
+.gp-card-wordmark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: clamp(10px, 2vh, 16px) 0 4px;
+}
+
+.gp-wordmark-main {
+    font: 700 clamp(30px, 7vw, 38px) / 1 'Fraunces', Georgia, serif;
+    letter-spacing: 0.14em;
+    text-indent: 0.14em;
+    color: var(--gp-ink);
+}
+
+.gp-wordmark-sub {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    color: var(--gp-green);
+}
+
+.gp-wordmark-rule {
+    flex: 1;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--gp-green));
+    border: 0;
+}
+
+.gp-wordmark-rule:last-child {
+    background: linear-gradient(90deg, var(--gp-green), transparent);
+}
+
+.gp-card .gp-sub {
+    margin: clamp(10px, 2.2vh, 18px) 0 clamp(16px, 3.4vh, 28px);
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--gp-muted);
+}
+
+/* Card footer: divider + brand line + tagline, like the mockup. */
+.gp-card-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: clamp(16px, 3.4vh, 28px);
+}
+
+.gp-card-footer-rule {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #e8efe6;
+    margin-bottom: 10px;
+}
+
+.gp-card-footer-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+    color: #93a398;
+}
+
+.gp-card-footer-tag {
+    font-size: 13px;
+    font-style: italic;
+    color: #a7b4ab;
+}
+
+/* ---- the flip: sign-in and sign-up share one card box ---- */
+
+.gp-flip {
+    width: min(480px, 100%);
+    perspective: 1600px;
+    position: relative;
+    z-index: 1;
+    animation: gp-rise 0.42s ease both;
+}
+
+.gp-flip-inner {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.32, 0.72, 0.24, 1);
+}
+
+.gp-flip-inner.is-flipped {
+    transform: rotateY(180deg);
+}
+
+/* Both faces sit in the same grid cell, so the box is always as tall as the
+   taller one. The face pointing away is hidden by backface-visibility (the
+   `inert` attribute keeps it out of reach of clicks, tabs and screen
+   readers), so nothing needs to be faded out with `visibility` - which would
+   also delay the focus hand-off to the face you just flipped to.
+   The rise animation lives on the wrapper: on a face it would override the
+   face's rotateY with its own `transform` and pin it face-down. */
+.gp-card-face {
+    grid-area: 1 / 1;
+    width: 100%;
+    animation: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.gp-card-face-back {
+    transform: rotateY(180deg);
+}
+
+/* Sign-up face: a lighter brand block and tighter fields, so five fields and
+   the login face still share one screen-height box. */
+.gp-card-brand-compact .gp-card-logo {
+    width: clamp(40px, 5.5vh, 52px);
+    height: clamp(40px, 5.5vh, 52px);
+}
+
+.gp-card-title {
+    margin: 8px 0 0;
+    font: 600 clamp(22px, 3.4vh, 27px) / 1.15 'Fraunces', Georgia, serif;
+    letter-spacing: -0.01em;
+    color: var(--gp-ink);
+}
+
+.gp-card-brand-compact .gp-sub {
+    margin: 4px 0 clamp(10px, 1.6vh, 14px);
+    font-size: 13.5px;
+}
+
+.gp-card-face-back .gp-field {
+    margin-bottom: clamp(8px, 1.4vh, 12px);
+}
+
+.gp-card-face-back .gp-input {
+    height: clamp(42px, 5.8vh, 50px);
+}
+
+.gp-card-face-back .gp-submit {
+    margin-top: clamp(12px, 2vh, 18px);
+}
+
+.gp-card-face-back .gp-swap {
+    margin-top: 10px;
+}
+
+/* "Don't have an account? Sign up" - and its twin under the sign-up form. */
+.gp-swap {
+    margin: 14px 0 0;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gp-muted);
+}
+
+.gp-swap-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--gp-green);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.16s ease;
+}
+
+.gp-swap-btn:hover {
+    color: var(--gp-green-dark);
+}
+
+/* Shown once under the login form, right after a sign-up. */
+.gp-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 14px;
+    padding: 10px 13px;
+    border-radius: 12px;
+    background: #eaf7ee;
+    color: var(--gp-green-dark);
+    font-size: 13.5px;
+    font-weight: 600;
+    animation: gp-rise 0.24s ease both;
+}
+
+/* Demo accounts float below the card on the dark canvas. */
+.gp-demo-accounts {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 3;
+    max-width: min(560px, calc(100% - 40px));
+    padding: 10px 16px;
+    border-radius: 14px;
+    background: rgba(4, 26, 13, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(8px);
+    color: #d8f3e2;
+    font-size: 12.5px;
+}
+
+.gp-demo-accounts summary {
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    color: #b7e7c6;
+    list-style: none;
+}
+
+.gp-demo-accounts summary::-webkit-details-marker {
+    display: none;
+}
+
+.gp-demo-accounts ul {
+    margin: 10px 0 2px;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.gp-demo-accounts li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    color: rgba(232, 250, 238, 0.8);
+}
+
+.gp-demo-accounts code {
+    padding: 3px 8px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #e9fbef;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.gp-demo-accounts em {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(47, 145, 82, 0.35);
+    color: #b7e7c6;
+    font-size: 10.5px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.gp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: clamp(10px, 2vh, 16px);
+    font-size: 14px;
+    font-weight: 700;
+    color: #3d5a48;
+}
+
+.gp-input {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    height: clamp(46px, 6.6vh, 54px);
+    padding: 0 14px;
+    border: 1.5px solid #dfeade;
+    border-radius: 15px;
+    background: var(--gp-cream);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+
+.gp-input:focus-within {
+    border-color: var(--gp-green-light);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(47, 145, 82, 0.16);
+}
+
+.gp-input.has-error {
+    border-color: #e0756d;
+}
+
+.gp-input > i {
+    font-size: 17px;
+    color: #7c9384;
+}
+
+.gp-input input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--gp-ink);
+}
+
+.gp-input input::placeholder {
+    color: #9aa89d;
+}
+
+.gp-input select {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--gp-ink);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.gp-input select option {
+    background: #ffffff;
+    color: #1f3a27;
+}
+
+.gp-eye {
+    display: grid;
+    place-items: center;
+    padding: 7px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #7c9384;
+    font-size: 17px;
+    cursor: pointer;
+    transition: color 0.16s ease, background 0.16s ease;
+}
+
+.gp-eye:hover {
+    color: var(--gp-green);
+    background: #e9f5ea;
+}
+
+.gp-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 0;
+    padding: 10px 13px;
+    border-radius: 12px;
+    background: #fdefee;
+    color: #b3453c;
+    font-size: 13.5px;
+    font-weight: 600;
+    animation: gp-rise 0.24s ease both;
+}
+
+.gp-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: clamp(48px, 6.8vh, 56px);
+    margin-top: clamp(14px, 2.6vh, 22px);
+
+    border: 0;
+    border-radius: 15px;
+    background: linear-gradient(180deg, var(--gp-green-light), var(--gp-green));
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    box-shadow: 0 14px 28px rgba(29, 114, 60, 0.34);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.gp-submit:hover {
+    background: linear-gradient(180deg, var(--gp-green), var(--gp-green-dark));
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(29, 114, 60, 0.4);
+}
+
+.gp-submit:active {
+    transform: none;
+}
+
+.gp-submit i {
+    font-size: 15px;
+}
+
+.gp-hint {
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid #eef3ec;
+    font-size: 13px;
+    color: var(--gp-muted);
+}
+
+.gp-hint-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #93a398;
+}
+
+.gp-hint ul {
+    margin: 11px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gp-hint li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    color: var(--gp-muted);
+}
+
+.gp-hint code {
+    padding: 4px 9px;
+    border-radius: 8px;
+    background: var(--gp-cream);
+    border: 1px solid #e3ece1;
+    color: var(--gp-green-dark);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.gp-hint em {
+    margin-left: auto;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #ecf6ee;
+    color: var(--gp-green);
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ---- the role selection page ---- */
+
+/* Keep the chicken/farm artwork on the left and float the content over the
+   darker right side of the shared auth canvas. */
+.gp-auth.gp-roles-screen {
+    justify-items: end;
+    align-items: center;
+    padding:
+        clamp(24px, 4vh, 48px)
+        clamp(20px, 4vw, 64px)
+        clamp(24px, 4vh, 48px)
+        clamp(20px, 30vw, 560px);
+    overflow-y: auto;
+}
+
+.gp-roles {
+    position: relative;
+    z-index: 1;
+    width: min(940px, 100%);
+    text-align: center;
+    animation: gp-rise 0.5s ease both;
+}
+
+.gp-roles-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 22px 8px 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(184, 255, 207, 0.24);
+    box-shadow:
+        0 14px 34px rgba(1, 12, 6, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    text-align: left;
+}
+
+.gp-roles-logo {
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow:
+        0 0 0 1px rgba(190, 255, 210, 0.3),
+        0 8px 20px rgba(1, 12, 6, 0.35);
+}
+
+.gp-roles-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.gp-roles-brand-text b {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+
+.gp-roles-brand-text small {
+    margin-top: 5px;
+    color: #a9e8bd;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.gp-roles-intro {
+    animation: gp-rise 0.5s ease both;
+    animation-delay: 0.06s;
+}
+
+.gp-roles-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: clamp(22px, 3.4vh, 32px);
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(184, 255, 207, 0.2);
+    color: #c4f0d2;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.gp-roles-kicker i {
+    color: #7dffb4;
+    font-size: 13px;
+}
+
+.gp-roles h1 {
+    margin: 18px 0 10px;
+    font: 600 clamp(36px, 5vw, 56px) / 1.05 'Fraunces', serif;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.28);
+}
+
+.gp-roles-intro > p {
+    margin: 0 auto;
+    max-width: 640px;
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.65;
+    color: rgba(235, 250, 239, 0.8);
+}
+
+.gp-roles-intro > p b {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.gp-role-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(18px, 2.4vw, 28px);
+    margin-top: clamp(28px, 4vh, 40px);
+}
+
+.gp-role-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(28px, 3.6vh, 38px) clamp(22px, 2.6vw, 34px) clamp(26px, 3.2vh, 34px);
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(122, 255, 163, 0.14), transparent 62%),
+        linear-gradient(165deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.055));
+    border: 1px solid rgba(184, 255, 207, 0.2);
+    border-radius: 30px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow:
+        0 28px 60px rgba(1, 12, 6, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(18px) saturate(135%);
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+    animation: gp-rise 0.5s ease both;
+    transition:
+        transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1),
+        border-color 0.28s ease,
+        box-shadow 0.28s ease;
+}
+
+/* Soft green pool at the base of each card + a hairline highlight on top. */
+.gp-role-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(70% 55% at 50% 108%, rgba(64, 214, 108, 0.32), transparent 72%);
+    opacity: 0.72;
+    transition: opacity 0.28s ease;
+}
+
+.gp-role-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16%;
+    right: 16%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(178, 255, 203, 0.65), transparent);
+    opacity: 0.65;
+}
+
+.gp-role-card:hover,
+.gp-role-card:focus-within {
+    transform: translateY(-7px);
+    border-color: rgba(122, 245, 156, 0.52);
+    box-shadow:
+        0 34px 70px rgba(1, 12, 6, 0.5),
+        0 0 0 1px rgba(122, 255, 156, 0.16),
+        0 0 42px rgba(56, 200, 100, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.gp-role-card:hover::before,
+.gp-role-card:focus-within::before {
+    opacity: 1;
+}
+
+.gp-role-card:nth-child(2) {
+    animation-delay: 0.09s;
+}
+
+.gp-role-icon {
+    display: grid;
+    place-items: center;
+    width: clamp(68px, 8vw, 82px);
+    height: clamp(68px, 8vw, 82px);
+    border-radius: 24px;
+    font-size: clamp(30px, 3.4vw, 38px);
+    color: #ffffff;
+    background: linear-gradient(155deg, #4dc972 0%, #1f8b48 55%, #145c31 100%);
+    box-shadow:
+        0 16px 34px rgba(20, 92, 49, 0.5),
+        inset 0 0 0 1px rgba(184, 255, 207, 0.24),
+        0 0 26px rgba(93, 228, 133, 0.25);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.gp-role-icon.cashier {
+    background: linear-gradient(155deg, #57d98a 0%, #228d55 52%, #0f5c36 100%);
+}
+
+.gp-role-card:hover .gp-role-icon,
+.gp-role-card:focus-within .gp-role-icon {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow:
+        0 20px 40px rgba(20, 92, 49, 0.58),
+        inset 0 0 0 1px rgba(184, 255, 207, 0.34),
+        0 0 34px rgba(104, 244, 144, 0.34);
+}
+
+.gp-role-eyebrow {
+    margin-top: 22px;
+    color: #93e9ab;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.gp-role-name {
+    display: block;
+    margin-top: 8px;
+    font: 600 clamp(28px, 3vw, 36px) / 1.1 'Fraunces', serif;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.3);
+}
+
+.gp-role-sub {
+    display: block;
+    max-width: 290px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(226, 245, 231, 0.76);
+}
+
+/* The ID + PIN card that appears after a role is picked. */
+.gp-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 18px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--gp-muted);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.16s ease;
+}
+
+.gp-back:hover {
+    color: var(--gp-green);
+}
+
+/* Inside the sign-in card the brand belongs to the card flow. The absolute
+   position on `.gp-auth .gp-brand` is only for the canvas-level wordmark. */
+.gp-signin .gp-brand {
+    position: static;
+    margin-bottom: 4px;
+}
+
+.gp-signin .gp-title {
+    margin-top: 14px;
+}
+
+/* Four boxes, one per PIN digit. */
+.gp-pin {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 4px 0 6px;
+}
+
+.gp-pin input {
+    width: 62px;
+    height: 70px;
+    border: 1.5px solid #dfeade;
+    border-radius: 15px;
+    background: var(--gp-cream);
+    color: var(--gp-ink);
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    outline: 0;
+    caret-color: var(--gp-green);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.gp-pin input:focus {
+    border-color: var(--gp-green-light);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(47, 145, 82, 0.16);
+}
+
+.gp-pin.has-error input {
+    border-color: #e0756d;
+}
+
+.gp-alt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    border: 0;
+    background: none;
+    color: var(--gp-muted);
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.16s ease;
+}
+
+.gp-alt:hover {
+    color: var(--gp-green);
+}
+
+.gp-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.gp-role-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 54px;
+    margin-top: 26px;
+    border: 1px solid rgba(160, 255, 190, 0.22);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #3fb769 0%, #1d723c 100%);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+        0 14px 28px rgba(12, 72, 38, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.gp-role-btn i {
+    transition: transform 0.18s ease;
+}
+
+.gp-role-btn:hover {
+    background: linear-gradient(180deg, #4bca77 0%, #23884a 100%);
+    transform: translateY(-2px);
+    box-shadow:
+        0 18px 36px rgba(12, 72, 38, 0.55),
+        0 0 26px rgba(78, 226, 118, 0.28);
+}
+
+.gp-role-btn:hover i {
+    transform: translateX(4px);
+}
+
+.gp-role-btn:active {
+    transform: translateY(0);
+}
+
+.gp-role-hint {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--gp-muted);
+}
+
+.gp-role-hint code {
+    padding: 3px 8px;
+    border-radius: 7px;
+    background: var(--gp-cream);
+    border: 1px solid #e3ece1;
+    color: var(--gp-green-dark);
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.gp-roles .gp-signout {
+    margin-top: clamp(26px, 4vh, 38px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(190, 255, 210, 0.2);
+    color: rgba(235, 250, 239, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.gp-roles .gp-signout:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(190, 255, 210, 0.4);
+    color: #ffffff;
+}
+
+.gp-auth .gp-card,
+.gp-auth .gp-flip {
+    animation: none;
+}
+
+.gp-signout {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 34px;
+    padding: 12px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e9fbee;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.gp-signout:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ------------------------------------------------------------------
+   Dark mode for the auth screens: same palette the admin panel uses,
+   so the card, its fields and the role boxes follow the theme toggle.
+   ------------------------------------------------------------------ */
+
+:root[data-theme='dark'] .gp-auth::after {
+    display: block;
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgba(2, 10, 5, 0.42);
+    pointer-events: none;
+}
+
+:root[data-theme='dark'] .gp-card {
+    background: #12301d;
+    box-shadow: 0 34px 80px rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme='dark'] .gp-wordmark-main,
+:root[data-theme='dark'] .gp-title,
+:root[data-theme='dark'] .gp-card-title,
+:root[data-theme='dark'] .gp-brand-name b,
+:root[data-theme='dark'] .gp-role-name {
+    color: #edf5eb;
+}
+
+:root[data-theme='dark'] .gp-wordmark-sub,
+:root[data-theme='dark'] .gp-hint-label {
+    color: #75d68b;
+}
+
+:root[data-theme='dark'] .gp-wordmark-rule {
+    background: linear-gradient(90deg, transparent, var(--gp-green-light));
+}
+
+:root[data-theme='dark'] .gp-wordmark-rule:last-child {
+    background: linear-gradient(90deg, var(--gp-green-light), transparent);
+}
+
+:root[data-theme='dark'] .gp-card .gp-sub,
+:root[data-theme='dark'] .gp-role-sub,
+:root[data-theme='dark'] .gp-back,
+:root[data-theme='dark'] .gp-alt,
+:root[data-theme='dark'] .gp-role-hint {
+    color: #a7b6aa;
+}
+
+:root[data-theme='dark'] .gp-field {
+    color: #c1d0c3;
+}
+
+:root[data-theme='dark'] .gp-input {
+    background: #16311f;
+    border-color: #35543f;
+}
+
+:root[data-theme='dark'] .gp-input:focus-within {
+    background: #1a3a26;
+    border-color: var(--gp-green-light);
+    box-shadow: 0 0 0 4px rgba(81, 216, 121, 0.16);
+}
+
+:root[data-theme='dark'] .gp-input input {
+    color: #e4eee5;
+}
+
+:root[data-theme='dark'] .gp-input input::placeholder {
+    color: #7d8f82;
+}
+
+:root[data-theme='dark'] .gp-input select {
+    color: #e4eee5;
+}
+
+:root[data-theme='dark'] .gp-input select option {
+    background: #16311f;
+    color: #e4eee5;
+}
+
+:root[data-theme='dark'] .gp-input > i,
+:root[data-theme='dark'] .gp-eye {
+    color: #9fb0a3;
+}
+
+:root[data-theme='dark'] .gp-eye:hover {
+    background: #1d3b29;
+    color: #75d68b;
+}
+
+:root[data-theme='dark'] .gp-input.has-error {
+    border-color: #c84940;
+}
+
+:root[data-theme='dark'] .gp-error {
+    background: #3a1f1d;
+    color: #f19a92;
+}
+
+:root[data-theme='dark'] .gp-card-footer-rule {
+    background: #26362c;
+}
+
+:root[data-theme='dark'] .gp-card-footer-name {
+    color: #7d9484;
+}
+
+:root[data-theme='dark'] .gp-card-footer-tag {
+    color: #93a596;
+}
+
+:root[data-theme='dark'] .gp-hint {
+    border-top-color: #26362c;
+}
+
+:root[data-theme='dark'] .gp-hint code,
+:root[data-theme='dark'] .gp-role-hint code {
+    background: #16311f;
+    border-color: #2d4a37;
+    color: #a4e1aa;
+}
+
+:root[data-theme='dark'] .gp-hint em {
+    background: #1d3b29;
+    color: #8fe0a0;
+}
+
+:root[data-theme='dark'] .gp-pin input {
+    background: #16311f;
+    border-color: #35543f;
+    color: #e4eee5;
+}
+
+:root[data-theme='dark'] .gp-pin input:focus {
+    background: #1a3a26;
+    border-color: var(--gp-green-light);
+    box-shadow: 0 0 0 4px rgba(81, 216, 121, 0.16);
+}
+
+:root[data-theme='dark'] .gp-pin.has-error input {
+    border-color: #c84940;
+}
+
+:root[data-theme='dark'] .gp-auth.gp-roles-screen {
+    background:
+        radial-gradient(760px 560px at 50% 42%, rgba(34, 121, 66, 0.42), transparent 72%),
+        linear-gradient(145deg, rgba(2, 20, 10, 0.72), rgba(3, 27, 14, 0.92)),
+        url('../assets/login-bg-hd.jpg') center / cover no-repeat,
+        linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+}
+
+:root[data-theme='dark'] .gp-auth.gp-roles-screen::before {
+    opacity: 0.52;
+}
+
+:root[data-theme='dark'] .gp-role-card {
+    background: #12301d;
+    border-color: rgba(184, 255, 207, 0.25);
+    box-shadow: 0 34px 80px rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme='dark'] .gp-role-card::before {
+    opacity: 0;
+}
+
+:root[data-theme='dark'] .gp-role-card::after {
+    opacity: 0.35;
+}
+
+:root[data-theme='dark'] .gp-notice {
+    background: #1d3b29;
+    color: #8fe0a0;
+}
+
+:root[data-theme='dark'] .gp-swap {
+    color: #a7b6aa;
+}
+
+:root[data-theme='dark'] .gp-swap-btn {
+    color: #75d68b;
+}
+
+:root[data-theme='dark'] .gp-swap-btn:hover {
+    color: #a4e1aa;
+}
+
+:root[data-theme='light'] .gp-auth.gp-roles-screen {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(3, 18, 9, 0.12) 0%,
+            rgba(3, 18, 9, 0.16) 28%,
+            rgba(232, 246, 233, 0.62) 38%,
+            rgba(232, 246, 233, 0.95) 50%,
+            #e8f6e9 62%,
+            #dff1e2 100%
+        ),
+        url('../assets/login-bg-hd.jpg') left center / cover no-repeat,
+        linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+}
+
+:root[data-theme='light'] .gp-auth.gp-roles-screen::before {
+    opacity: 0.24;
+}
+
+:root[data-theme='light'] .gp-auth.gp-roles-screen .login-theme-toggle {
+    border-color: rgba(29, 114, 60, 0.24) !important;
+    background: rgba(232, 246, 233, 0.9) !important;
+    color: var(--gp-green-dark) !important;
+}
+
+:root[data-theme='light'] .gp-auth.gp-roles-screen .login-theme-toggle:hover {
+    background: #d9eedd !important;
+    color: var(--gp-green) !important;
+}
+
+:root[data-theme='light'] .gp-roles-brand {
+    background: rgba(232, 246, 233, 0.9);
+    border-color: rgba(29, 114, 60, 0.18);
+    box-shadow:
+        0 16px 34px rgba(14, 59, 34, 0.12),
+        inset 0 1px 0 #f6fdf7;
+}
+
+:root[data-theme='light'] .gp-roles-brand-text b {
+    color: var(--gp-ink);
+}
+
+:root[data-theme='light'] .gp-roles-brand-text small {
+    color: var(--gp-green-light);
+}
+
+:root[data-theme='light'] .gp-roles-kicker {
+    background: rgba(232, 246, 233, 0.9);
+    border-color: rgba(29, 114, 60, 0.18);
+    color: var(--gp-green-dark);
+}
+
+:root[data-theme='light'] .gp-roles-kicker i {
+    color: var(--gp-green);
+}
+
+:root[data-theme='light'] .gp-roles h1 {
+    color: var(--gp-ink);
+    text-shadow: none;
+}
+
+:root[data-theme='light'] .gp-roles-intro > p {
+    color: #3d5a48;
+}
+
+:root[data-theme='light'] .gp-roles-intro > p b {
+    color: var(--gp-ink);
+}
+
+:root[data-theme='light'] .gp-role-card {
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(47, 145, 82, 0.12), transparent 62%),
+        linear-gradient(165deg, #e8f6ea, #dbefdf);
+    border-color: rgba(29, 114, 60, 0.2);
+    box-shadow:
+        0 24px 55px rgba(14, 59, 34, 0.14),
+        inset 0 1px 0 #f6fdf7;
+}
+
+:root[data-theme='light'] .gp-role-card::before {
+    background: radial-gradient(70% 55% at 50% 108%, rgba(47, 145, 82, 0.18), transparent 72%);
+    opacity: 0.55;
+}
+
+:root[data-theme='light'] .gp-role-card::after {
+    background: linear-gradient(90deg, transparent, rgba(29, 114, 60, 0.28), transparent);
+}
+
+:root[data-theme='light'] .gp-role-card:hover,
+:root[data-theme='light'] .gp-role-card:focus-within {
+    border-color: rgba(29, 114, 60, 0.38);
+    box-shadow:
+        0 30px 64px rgba(14, 59, 34, 0.18),
+        0 0 0 1px rgba(29, 114, 60, 0.1),
+        inset 0 1px 0 #ffffff;
+}
+
+:root[data-theme='light'] .gp-role-eyebrow {
+    color: var(--gp-green-light);
+}
+
+:root[data-theme='light'] .gp-role-name {
+    color: var(--gp-ink);
+    text-shadow: none;
+}
+
+:root[data-theme='light'] .gp-role-sub {
+    color: var(--gp-muted);
+}
+
+:root[data-theme='light'] .gp-roles .gp-signout {
+    background: rgba(232, 246, 233, 0.9);
+    border-color: rgba(29, 114, 60, 0.18);
+    color: #3d5a48;
+}
+
+:root[data-theme='light'] .gp-roles .gp-signout:hover {
+    background: #d9eedd;
+    border-color: rgba(29, 114, 60, 0.36);
+    color: var(--gp-ink);
+}
+
+@media (max-width: 1180px) {
+    :root[data-theme='light'] .gp-auth.gp-roles-screen {
+        background:
+            linear-gradient(180deg, rgba(232, 246, 233, 0.86), rgba(223, 241, 226, 0.96)),
+            url('../assets/login-bg-hd.jpg') center / cover no-repeat,
+            linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+    }
+
+    :root[data-theme='light'] .gp-auth.gp-roles-screen::before {
+        opacity: 0.16;
+    }
+}
+
+/* Narrower desktops: centre the card pair instead of hugging the right edge. */
+@media (max-width: 1180px) {
+    .gp-auth.gp-roles-screen {
+        justify-items: center;
+        padding-inline: clamp(20px, 4vw, 48px);
+    }
+}
+
+/* Short desktop windows: shed a little more height so the card still fits. */
+@media (max-height: 720px) and (min-width: 761px) {
+    .gp-card-logo {
+        width: 58px;
+        height: 58px;
+    }
+
+    .gp-wordmark-main {
+        font-size: 30px;
+    }
+
+    .gp-card .gp-sub {
+        margin-bottom: 14px;
+        font-size: 14px;
+    }
+
+    .gp-field {
+        margin-bottom: 9px;
+    }
+
+    .gp-input {
+        height: 44px;
+    }
+
+    .gp-submit {
+        height: 46px;
+        margin-top: 12px;
+    }
+
+    .gp-card-footer {
+        margin-top: 14px;
+    }
+
+    .gp-auth.gp-roles-screen {
+        padding-block: 20px;
+    }
+
+    .gp-roles-kicker {
+        margin-top: 14px;
+    }
+
+    .gp-role-grid {
+        margin-top: 22px;
+    }
+
+    .gp-role-card {
+        padding: 22px 24px 20px;
+    }
+
+    .gp-role-icon {
+        width: 62px;
+        height: 62px;
+        font-size: 28px;
+        border-radius: 19px;
+    }
+
+    .gp-role-eyebrow {
+        margin-top: 15px;
+    }
+
+    .gp-role-name {
+        margin-top: 5px;
+        font-size: 28px;
+    }
+
+    .gp-role-sub {
+        margin-top: 8px;
+        font-size: 14px;
+    }
+
+    .gp-role-btn {
+        height: 48px;
+        margin-top: 18px;
+    }
+
+    .gp-roles .gp-signout {
+        margin-top: 20px;
+    }
+}
+
+
+@media (max-width: 760px) {
+    .gp-auth {
+        padding: 30px 16px 90px;
+        align-items: start;
+        background:
+            linear-gradient(180deg, rgba(3, 22, 11, 0.55) 0%, rgba(3, 24, 12, 0.88) 40%, #031d0e 100%),
+            url('../assets/login-bg-hd.jpg') center / cover no-repeat,
+            url('../assets/login-bg.jpg') center / cover no-repeat,
+            linear-gradient(155deg, var(--gp-green-deep) 0%, #17623a 46%, var(--gp-green-light) 100%);
+    }
+
+    .gp-auth.gp-login-screen {
+        justify-items: center;
+        padding: 80px 16px 40px;
+    }
+
+    .gp-auth.gp-roles-screen {
+        justify-items: center;
+        align-items: start;
+        padding: 88px 16px 48px;
+    }
+
+    .gp-roles-brand {
+        padding: 7px 18px 7px 8px;
+    }
+
+    .gp-roles-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .gp-role-card {
+        padding: 30px 22px 28px;
+        border-radius: 24px;
+    }
+
+    .gp-role-icon {
+        width: 72px;
+        height: 72px;
+        font-size: 32px;
+    }
+
+    .gp-role-btn {
+        margin-top: 22px;
+    }
+
+    .gp-auth .gp-brand {
+        top: 26px;
+    }
+
+    .gp-card {
+        padding: 32px 22px 26px;
+        border-radius: 22px;
+    }
+
+    .gp-wordmark-sub {
+        gap: 10px;
+        font-size: 11.5px;
+        letter-spacing: 0.3em;
+        text-indent: 0.3em;
+    }
+
+    .gp-demo-accounts {
+        position: static;
+        transform: none;
+        margin: 18px auto 0;
+        justify-self: center;
+    }
+
+    .gp-demo-accounts em {
+        margin-left: 0;
+    }
+
+    .gp-role-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 28px;
+    }
+
+    .gp-hint em {
+        margin-left: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .route-transition,
+    .gp-card,
+    .gp-flip,
+    .gp-flip-inner,
+    .gp-role-card,
+    .gp-roles-kicker,
+    .gp-roles h1,
+    .gp-roles-intro > p,
+    .gp-error,
+    .gp-notice {
+        animation: none !important;
+    }
+
+    .gp-flip-inner {
+        transition: none;
+    }
+
+    .gp-submit:hover,
+    .gp-role-btn:hover {
+        transform: none;
+    }
+}
+
+/* Login uses the same green glass treatment as the role selection cards. */
+.gp-auth.gp-login-screen {
+    place-items: center;
+    justify-items: end;
+    padding: 36px clamp(24px, 7vw, 136px) 36px 20px;
+    background:
+        radial-gradient(760px 560px at 50% 42%, rgba(34, 121, 66, 0.42), transparent 72%),
+        linear-gradient(145deg, rgba(2, 20, 10, 0.72), rgba(3, 27, 14, 0.92)),
+        url('../assets/login-bg-hd.jpg') center / cover no-repeat,
+        linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+}
+
+.gp-auth.gp-login-screen::before {
+    opacity: 0.52;
+}
+
+.gp-login-screen .gp-flip {
+    width: min(540px, 100%);
+}
+
+.gp-login-screen .gp-card {
+    padding: 28px clamp(22px, 4vw, 40px) 26px;
+    color: #eef8f0;
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(122, 255, 163, 0.14), transparent 62%),
+        linear-gradient(165deg, rgba(13, 49, 28, 0.91), rgba(4, 29, 15, 0.96));
+    border: 1px solid rgba(184, 255, 207, 0.25);
+    border-radius: 30px;
+    box-shadow: 0 28px 60px rgba(1, 12, 6, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(18px) saturate(135%);
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+.gp-login-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto 16px;
+    color: #a9e8bd;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+}
+
+.gp-login-brand img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 0;
+    filter: drop-shadow(0 8px 16px rgba(1, 12, 6, 0.38));
+    animation: gp-login-logo-in .48s cubic-bezier(.16, 1, .3, 1) .62s both;
+}
+
+/* Only the sign-in face takes part in the splash -> card morph. The sign-up
+   face renders the same image, and a duplicate view-transition-name aborts
+   the whole transition. */
+.gp-card-face-front .gp-login-brand img {
+    view-transition-name: guinhawa-intro-logo;
+}
+
+@keyframes gp-login-logo-in {
+    0% { opacity: 0; transform: translateY(-8px) scale(.86); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.gp-login-screen .gp-title {
+    margin-top: 18px;
+    margin-bottom: 4px;
+    color: #fff;
+    text-align: center;
+    font-size: clamp(28px, 4.2vh, 33px);
+}
+
+.gp-login-screen .gp-sub {
+    margin-bottom: clamp(14px, 2.4vh, 20px);
+    color: rgba(226, 245, 231, 0.76);
+    font-size: 14.5px;
+    line-height: 1.55;
+}
+
+.gp-login-screen .gp-field {
+    gap: 7px;
+    margin-bottom: clamp(8px, 1.6vh, 12px);
+    color: #d4ead9;
+    font-size: 13.5px;
+}
+
+.gp-login-screen .gp-input {
+    height: clamp(44px, 5.6vh, 50px);
+    border-color: rgba(184, 255, 207, 0.24);
+    background: rgba(1, 17, 8, 0.34);
+    color: #a9e8bd;
+}
+
+.gp-login-screen .gp-input input {
+    color: #f4faf5;
+}
+
+.gp-login-screen .gp-input input::placeholder {
+    color: rgba(226, 245, 231, 0.45);
+}
+
+.gp-login-screen .gp-submit {
+    height: clamp(48px, 6vh, 53px);
+    margin-top: clamp(12px, 2vh, 18px);
+    font-size: 16.5px;
+}
+
+.gp-login-screen .gp-swap {
+    margin-top: 12px;
+    color: rgba(226, 245, 231, 0.7);
+}
+
+.gp-login-screen .gp-swap-btn {
+    color: #93e9ab;
+}
+
+.gp-login-screen .gp-card-footer {
+    gap: 7px;
+    margin-top: clamp(14px, 2.4vh, 22px);
+}
+
+.gp-login-screen .gp-card-footer-rule {
+    margin-bottom: 8px;
+    background: rgba(184, 255, 207, 0.2);
+}
+
+.gp-login-screen .gp-card-footer-name,
+.gp-login-screen .gp-card-footer-tag {
+    color: rgba(226, 245, 231, 0.56);
+}
+
+.gp-login-screen .gp-demo-accounts {
+    color: #d4ead9;
+}
+
+@media (max-width: 760px) {
+    .gp-auth.gp-login-screen {
+        justify-items: center;
+        padding: 78px 16px 30px;
+    }
+
+    .gp-login-screen .gp-flip {
+        width: min(480px, 100%);
+    }
+}
+
+@media (min-width: 761px) and (max-height: 900px) {
+    .gp-auth.gp-login-screen {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .gp-login-screen .gp-flip {
+        width: min(500px, 100%);
+    }
+
+    .gp-login-screen .gp-card {
+        padding-top: 24px;
+        padding-bottom: 22px;
+    }
+
+    .gp-login-brand {
+        gap: 7px;
+        margin-bottom: 14px;
+        font-size: 9.5px;
+    }
+
+    .gp-login-brand img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .gp-login-screen .gp-title {
+        margin-top: 16px;
+        margin-bottom: 4px;
+        font-size: 30px;
+    }
+
+    .gp-login-screen .gp-sub {
+        margin-bottom: 18px;
+        font-size: 14px;
+    }
+
+    .gp-login-screen .gp-field {
+        gap: 6px;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+
+    .gp-login-screen .gp-input {
+        height: 46px;
+    }
+
+    .gp-login-screen .gp-input input {
+        font-size: 15px;
+    }
+
+    .gp-login-screen .gp-submit {
+        height: 50px;
+        margin-top: 14px;
+        font-size: 16px;
+    }
+
+    .gp-login-screen .gp-swap {
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    .gp-login-screen .gp-card-footer {
+        gap: 6px;
+        margin-top: 16px;
+    }
+
+    .gp-login-screen .gp-card-footer-rule {
+        margin-bottom: 6px;
+    }
+
+    .gp-login-screen .gp-card-footer-name {
+        font-size: 11px;
+    }
+
+    .gp-login-screen .gp-card-footer-tag {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 761px) and (max-height: 760px) {
+    .gp-auth.gp-login-screen {
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    .gp-login-screen .gp-card {
+        padding-top: 20px;
+        padding-bottom: 18px;
+    }
+
+    .gp-login-brand img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .gp-login-brand {
+        margin-bottom: 10px;
+    }
+
+    .gp-login-screen .gp-title {
+        margin-top: 12px;
+        font-size: 27px;
+    }
+
+    .gp-login-screen .gp-sub {
+        margin-bottom: 14px;
+        font-size: 13px;
+    }
+
+    .gp-login-screen .gp-field {
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+
+    .gp-login-screen .gp-input {
+        height: 42px;
+    }
+
+    .gp-login-screen .gp-submit {
+        height: 46px;
+        margin-top: 12px;
+    }
+
+    .gp-login-screen .gp-card-footer {
+        gap: 4px;
+        margin-top: 12px;
+    }
+
+    .gp-login-screen .gp-card-footer-rule {
+        margin-bottom: 4px;
+    }
+
+    .gp-login-screen .gp-card-footer-tag {
+        display: none;
+    }
+}
+
+.gp-auth > .gp-card {
+    width: min(430px, 100%);
+    padding: clamp(24px, 3.4vh, 32px) clamp(24px, 4vw, 34px) clamp(20px, 3vh, 26px);
+    border-radius: 24px;
+}
+
+.gp-auth > .gp-card .gp-brand-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    font-size: 22px;
+}
+
+.gp-auth > .gp-card .gp-brand-name b {
+    font-size: 22px;
+}
+
+.gp-auth > .gp-card .gp-back {
+    margin-top: 14px;
+}
+
+.gp-auth > .gp-card .gp-title {
+    margin-top: 12px;
+    font-size: clamp(28px, 4.2vh, 33px);
+}
+
+.gp-auth > .gp-card .gp-sub {
+    margin: 6px 0 18px;
+    font-size: 14px;
+}
+
+.gp-auth > .gp-card .gp-field {
+    gap: 7px;
+    margin-bottom: 12px;
+    font-size: 13.5px;
+}
+
+.gp-auth > .gp-card .gp-input {
+    height: clamp(44px, 5.6vh, 50px);
+}
+
+.gp-auth > .gp-card .gp-submit {
+    height: clamp(46px, 6vh, 52px);
+    margin-top: 14px;
+    font-size: 16px;
+}
+
+.gp-auth > .gp-card .gp-pin {
+    gap: 10px;
+    margin: 2px 0 4px;
+}
+
+.gp-auth > .gp-card .gp-pin input {
+    width: 56px;
+    height: 64px;
+    border-radius: 14px;
+    font-size: 28px;
+}
+
+.gp-auth > .gp-card .gp-hint {
+    margin-top: 18px;
+    padding-top: 14px;
+}
+
+.gp-auth > .gp-card .gp-hint ul {
+    margin-top: 8px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-login-brand {
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-login-brand img {
+    width: 48px;
+    height: 48px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-title {
+    margin-top: 10px;
+    font-size: 28px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-sub {
+    margin-bottom: 12px;
+    font-size: 13.5px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-field {
+    gap: 5px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-input {
+    height: 44px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-submit {
+    height: 48px;
+    margin-top: 12px;
+    font-size: 16px;
+}
+
+.gp-login-screen .gp-card-face-back .gp-swap {
+    margin-top: 8px;
+}
+
+
+/* Light mode: the login screen follows the lighter green palette too. */
+:root[data-theme='light'] .gp-auth.gp-login-screen {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(3, 18, 9, 0.12) 0%,
+            rgba(3, 18, 9, 0.16) 28%,
+            rgba(232, 246, 233, 0.62) 38%,
+            rgba(232, 246, 233, 0.95) 50%,
+            #e8f6e9 62%,
+            #dff1e2 100%
+        ),
+        url('../assets/login-bg-hd.jpg') left center / cover no-repeat,
+        linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+}
+
+:root[data-theme='light'] .gp-auth.gp-login-screen::before {
+    opacity: 0.24;
+}
+
+:root[data-theme='light'] .gp-auth.gp-login-screen .login-theme-toggle {
+    border-color: rgba(29, 114, 60, 0.24) !important;
+    background: rgba(232, 246, 233, 0.9) !important;
+    color: var(--gp-green-dark) !important;
+}
+
+:root[data-theme='light'] .gp-auth.gp-login-screen .login-theme-toggle:hover {
+    background: #d9eedd !important;
+    color: var(--gp-green) !important;
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-card {
+    color: var(--gp-ink);
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(47, 145, 82, 0.12), transparent 62%),
+        linear-gradient(165deg, #e8f6ea, #dbefdf);
+    border-color: rgba(29, 114, 60, 0.2);
+    box-shadow:
+        0 24px 55px rgba(14, 59, 34, 0.14),
+        inset 0 1px 0 #f6fdf7;
+}
+
+:root[data-theme='light'] .gp-login-brand {
+    color: var(--gp-green-light);
+}
+
+:root[data-theme='light'] .gp-login-brand img {
+    box-shadow:
+        0 0 0 1px rgba(29, 114, 60, 0.18),
+        0 10px 24px rgba(14, 59, 34, 0.2);
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-title {
+    color: var(--gp-ink);
+    text-shadow: none;
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-sub {
+    color: var(--gp-muted);
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-field {
+    color: #3d5a48;
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-input {
+    background: #e0f2e4;
+    border-color: #cfe3d2;
+    color: var(--gp-green);
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-input input {
+    color: var(--gp-ink);
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-input input::placeholder {
+    color: #8ba393;
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-swap {
+    color: #5f7568;
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-swap-btn {
+    color: var(--gp-green);
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-card-footer-rule {
+    background: rgba(29, 114, 60, 0.2);
+}
+
+:root[data-theme='light'] .gp-login-screen .gp-card-footer-name,
+:root[data-theme='light'] .gp-login-screen .gp-card-footer-tag {
+    color: #6b8174;
+}
+
+:root[data-theme='light'] .gp-demo-accounts {
+    background: rgba(232, 246, 233, 0.9);
+    border-color: rgba(29, 114, 60, 0.18);
+    color: #3d5a48;
+}
+
+:root[data-theme='light'] .gp-demo-accounts summary {
+    color: var(--gp-green-dark);
+}
+
+:root[data-theme='light'] .gp-demo-accounts li {
+    color: #3d5a48;
+}
+
+:root[data-theme='light'] .gp-demo-accounts code {
+    background: #e0f2e4;
+    border-color: #cfe3d2;
+    color: var(--gp-ink);
+}
+
+:root[data-theme='light'] .gp-demo-accounts em {
+    background: rgba(47, 145, 82, 0.14);
+    color: var(--gp-green-dark);
+}
+
+:root[data-theme='light'] .gp-auth.gp-role-signin-screen {
+    background:
+        linear-gradient(180deg, rgba(232, 246, 233, 0.78), rgba(223, 241, 226, 0.94)),
+        url('../assets/login-bg-hd.jpg') center / cover no-repeat,
+        linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+}
+
+:root[data-theme='light'] .gp-auth.gp-role-signin-screen::before {
+    opacity: 0.2;
+}
+
+:root[data-theme='light'] .gp-auth.gp-role-signin-screen .login-theme-toggle {
+    border-color: rgba(29, 114, 60, 0.24) !important;
+    background: rgba(232, 246, 233, 0.9) !important;
+    color: var(--gp-green-dark) !important;
+}
+
+:root[data-theme='light'] .gp-auth.gp-role-signin-screen .login-theme-toggle:hover {
+    background: #d9eedd !important;
+    color: var(--gp-green) !important;
+}
+
+:root[data-theme='light'] .gp-auth > .gp-card {
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(47, 145, 82, 0.12), transparent 62%),
+        linear-gradient(165deg, #e8f6ea, #dbefdf);
+    border: 1px solid rgba(29, 114, 60, 0.2);
+    box-shadow:
+        0 24px 55px rgba(14, 59, 34, 0.14),
+        inset 0 1px 0 #f6fdf7;
+}
+
+:root[data-theme='light'] .gp-auth > .gp-card .gp-brand-name b {
+    color: var(--gp-ink);
+}
+
+:root[data-theme='light'] .gp-auth > .gp-card .gp-brand-name small {
+    color: var(--gp-green-light);
+}
+
+:root[data-theme='light'] .gp-auth > .gp-card .gp-hint-label {
+    color: var(--gp-green);
+}
+
+:root[data-theme='light'] .gp-auth > .gp-card .gp-hint code {
+    background: #e0f2e4;
+    border-color: #cfe3d2;
+    color: var(--gp-ink);
+}
+
+:root[data-theme='light'] .gp-auth > .gp-card .gp-input {
+    background: #e0f2e4;
+    border-color: #cfe3d2;
+}
+
+@media (max-width: 760px) {
+    :root[data-theme='light'] .gp-auth.gp-login-screen {
+        background:
+            linear-gradient(180deg, rgba(232, 246, 233, 0.86), rgba(223, 241, 226, 0.96)),
+            url('../assets/login-bg-hd.jpg') center / cover no-repeat,
+            linear-gradient(155deg, var(--gp-green-deep), #17623a 46%, var(--gp-green-light));
+    }
+}
+
+
+/* Receipt print view: hide the chrome, keep the sheet. */
+@media print {
+    .receipt-actions,
+    .admin-sidebar,
+    .admin-topbar,
+    .admin-scrim,
+    .admin-footer {
+        display: none !important;
+    }
+
+    .receipt-screen {
+        padding: 0;
+        background: #fff;
+    }
+
+    .receipt-sheet {
+        box-shadow: none;
+        border: 0;
+        max-width: none;
+    }
+}
+
+
+/* Quick Actions: a row of toned shortcut tiles (admin + staff dashboards). */
+.quick-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 2px 18px 18px;
+}
+
+.quick-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 14px 16px;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16, 24, 16, 0.12);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.quick-tile > i {
+    font-size: 17px;
+    flex: none;
+}
+
+.quick-tile b {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.quick-tile:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.07);
+    box-shadow: 0 8px 18px rgba(16, 24, 16, 0.16);
+}
+
+.quick-tile:active {
+    transform: translateY(0);
+}
+
+.quick-tile.tone-green { background: #1d723c; }
+.quick-tile.tone-blue { background: #2f6fe0; }
+.quick-tile.tone-orange { background: #e07c14; }
+.quick-tile.tone-purple { background: #7c5cbf; }
+
+:root[data-theme="dark"] .quick-tile {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .quick-tile.tone-green { background: #1f7c42; }
+:root[data-theme="dark"] .quick-tile.tone-blue { background: #2f6fe0; }
+:root[data-theme="dark"] .quick-tile.tone-orange { background: #c96f10; }
+:root[data-theme="dark"] .quick-tile.tone-purple { background: #6f51b0; }
+
+@media (max-width: 560px) {
+    .quick-tiles {
+        grid-template-columns: repeat(2, 1fr);
+        padding-inline: 15px;
+    }
+
+    .quick-tile {
+        min-height: 48px;
+        padding: 12px 10px;
+        gap: 8px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .quick-tiles {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ------------------------------------------------------------------
+   Login canvas: the supplied background image fills the whole screen
+   and stays pinned in place while the page scrolls.
+   ------------------------------------------------------------------ */
+
+.gp-auth.gp-login-screen,
+:root[data-theme='light'] .gp-auth.gp-login-screen {
+    background: url('../assets/background.png') center center / cover no-repeat;
+    background-attachment: fixed;
+}
+
+.gp-auth.gp-login-screen::before,
+:root[data-theme='light'] .gp-auth.gp-login-screen::before {
+    opacity: 0;
+}
+
+/* Sidebar brand: reuse the sign-in logo emblem. */
+.admin-logo-img {
+    width: 49px;
+    height: 49px;
+    flex: none;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow:
+        0 0 0 1px rgba(190, 255, 210, 0.32),
+        0 8px 20px rgba(1, 12, 6, 0.28);
+}
+
+/* ------------------------------------------------------------------
+   Admin topbar: global search with live page, product and order hits.
+   ------------------------------------------------------------------ */
+
+.topbar-search {
+    position: relative;
+    flex: 0 1 320px;
+    min-width: 160px;
+    margin-inline: 8px;
+}
+
+.topbar-search .admin-search {
+    width: 100%;
+    max-width: none;
+    height: 42px;
+    margin: 0;
+}
+
+.topbar-search .admin-search input {
+    font-size: 12.5px;
+}
+
+.topbar-search .admin-search input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.topbar-search-clear {
+    display: grid;
+    place-items: center;
+    padding: 4px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.topbar-search-clear:hover {
+    background: var(--admin-light);
+}
+
+.topbar-search-results {
+    position: absolute;
+    z-index: 80;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    max-height: min(60vh, 420px);
+    padding: 6px;
+    overflow: auto;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px rgba(14, 59, 34, 0.18);
+}
+
+.topbar-search-results button {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--admin-text);
+    text-align: left;
+    cursor: pointer;
+}
+
+.topbar-search-results button:hover,
+.topbar-search-results button.active {
+    background: var(--admin-light);
+}
+
+.topbar-search-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 33px;
+    height: 33px;
+    border-radius: 8px;
+    background: #e6f4e8;
+    color: var(--admin-green);
+    font-size: 15px;
+}
+
+.topbar-search-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.topbar-search-copy b {
+    overflow: hidden;
+    color: var(--admin-text);
+    font-size: 12.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.topbar-search-copy small {
+    overflow: hidden;
+    color: var(--admin-muted);
+    font-size: 11px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.topbar-search-enter {
+    margin-left: auto;
+    color: var(--admin-muted);
+    font-size: 11px;
+    opacity: 0;
+}
+
+.topbar-search-results button.active .topbar-search-enter {
+    opacity: 0.6;
+}
+
+.topbar-search-empty {
+    margin: 0;
+    padding: 14px 12px;
+    color: var(--admin-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+@media (max-width: 1279px) {
+    .topbar-search {
+        display: none;
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1500px) {
+    .counter-staff-app .topbar-left .breadcrumb-root,
+    .counter-staff-app .topbar-left .crumb-arrow,
+    .counter-staff-app .topbar-left .topbar-divider {
+        display: none;
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1400px) {
+    .counter-staff-app .today-date {
+        display: none;
+    }
+}
+
+.profile-name b,
+.profile-name small {
+    white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------
+   Admin welcome intro
+   Full-screen, dark green, shown once right after an admin signs in.
+   ------------------------------------------------------------------ */
+
+.admin-welcome {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: clamp(24px, 5vw, 64px);
+    overflow: hidden;
+    color: #eafff1;
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background:
+        radial-gradient(900px 540px at 50% -8%, rgba(72, 214, 123, 0.28), transparent 62%),
+        radial-gradient(760px 620px at 10% 90%, rgba(21, 120, 64, 0.42), transparent 70%),
+        radial-gradient(700px 520px at 94% 82%, rgba(126, 255, 164, 0.14), transparent 72%),
+        linear-gradient(160deg, #031309 0%, #062513 44%, #020c06 100%);
+    animation: admin-welcome-in 0.55s ease both;
+}
+
+.admin-welcome::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 34px 34px;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 72%);
+    opacity: 0.42;
+    pointer-events: none;
+}
+
+.admin-welcome.is-closing {
+    pointer-events: none;
+    animation: admin-welcome-out 0.75s ease forwards;
+}
+
+.admin-welcome-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(64px);
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+.admin-welcome-glow-a {
+    top: -20vmax;
+    left: 6%;
+    width: 44vmax;
+    height: 44vmax;
+    background: radial-gradient(circle, rgba(75, 228, 131, 0.32), transparent 66%);
+    animation: admin-welcome-glow 7s ease-in-out infinite alternate;
+}
+
+.admin-welcome-glow-b {
+    right: 2%;
+    bottom: -18vmax;
+    width: 38vmax;
+    height: 38vmax;
+    background: radial-gradient(circle, rgba(24, 122, 65, 0.48), transparent 70%);
+    animation: admin-welcome-glow 8.5s ease-in-out -3s infinite alternate;
+}
+
+.admin-welcome-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(980px, 100%);
+    text-align: center;
+}
+
+.admin-welcome-logo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: clamp(88px, 11vw, 124px);
+    height: clamp(88px, 11vw, 124px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, #f8fffa, #d7f6df);
+    box-shadow:
+        0 0 0 1px rgba(190, 255, 210, 0.35),
+        0 0 60px rgba(83, 240, 137, 0.35),
+        0 24px 60px rgba(0, 0, 0, 0.45);
+    animation: admin-welcome-logo-in 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.admin-welcome-logo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.admin-welcome-logo-ring {
+    position: absolute;
+    inset: -14px;
+    border: 1px solid rgba(144, 255, 178, 0.3);
+    border-radius: 50%;
+    animation: admin-welcome-ring 3.2s ease-out infinite;
+}
+
+.admin-welcome-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: clamp(20px, 3.5vh, 32px) 0 0;
+    color: #9fe6b3;
+    font-size: clamp(10px, 1.1vw, 12px);
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    animation: admin-welcome-rise 0.7s ease 0.18s both;
+}
+
+.admin-welcome-kicker i {
+    color: #d7ff9c;
+}
+
+.admin-welcome-title {
+    margin: clamp(10px, 2vh, 18px) 0 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(46px, 9vw, 112px);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: #f2fff5;
+    text-shadow:
+        0 0 26px rgba(142, 255, 176, 0.28),
+        0 20px 60px rgba(0, 0, 0, 0.5);
+    animation:
+        admin-welcome-title-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both,
+        admin-welcome-title-glow 3.6s ease-in-out 1.4s infinite alternate;
+}
+
+.admin-welcome-title span {
+    color: #a4ffbe;
+    text-shadow:
+        0 0 30px rgba(142, 255, 176, 0.42),
+        0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.admin-welcome-sub {
+    max-width: 620px;
+    margin: clamp(14px, 2.5vh, 22px) 0 0;
+    color: rgba(226, 248, 232, 0.78);
+    font-size: clamp(14px, 1.7vw, 18px);
+    line-height: 1.65;
+    animation: admin-welcome-rise 0.7s ease 0.5s both;
+}
+
+.admin-welcome-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: clamp(18px, 3vh, 28px) 0 0;
+    padding: 10px 18px;
+    border: 1px solid rgba(156, 255, 186, 0.22);
+    border-radius: 999px;
+    background: rgba(8, 39, 22, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: #c9f5d5;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    animation: admin-welcome-rise 0.7s ease 0.68s both;
+}
+
+.admin-welcome-date i {
+    color: #9bffb6;
+    font-size: 14px;
+}
+
+.admin-welcome-loader {
+    position: relative;
+    width: min(260px, 60vw);
+    height: 4px;
+    margin-top: clamp(26px, 4vh, 40px);
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(173, 255, 195, 0.12);
+    animation: admin-welcome-rise 0.6s ease 0.8s both;
+}
+
+.admin-welcome-loader span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2b8f52, #9bffb6);
+    box-shadow: 0 0 15px rgba(110, 255, 152, 0.55);
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: admin-welcome-progress 3.45s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s both;
+}
+
+.admin-welcome-hint {
+    margin: 12px 0 0;
+    color: rgba(186, 239, 200, 0.5);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    animation: admin-welcome-rise 0.6s ease 0.9s both;
+}
+
+@keyframes admin-welcome-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes admin-welcome-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(1.025); }
+}
+
+@keyframes admin-welcome-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes admin-welcome-logo-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.8); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes admin-welcome-title-in {
+    from { opacity: 0; transform: translateY(22px) scale(0.97); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes admin-welcome-title-glow {
+    from {
+        text-shadow:
+            0 0 24px rgba(142, 255, 176, 0.22),
+            0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    to {
+        text-shadow:
+            0 0 44px rgba(142, 255, 176, 0.4),
+            0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+}
+
+@keyframes admin-welcome-glow {
+    from { opacity: 0.62; transform: translate3d(0, 0, 0) scale(0.95); }
+    to { opacity: 1; transform: translate3d(0, -2vmax, 0) scale(1.06); }
+}
+
+@keyframes admin-welcome-ring {
+    0% { opacity: 0.8; transform: scale(0.92); }
+    100% { opacity: 0; transform: scale(1.28); }
+}
+
+@keyframes admin-welcome-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-welcome,
+    .admin-welcome::before,
+    .admin-welcome-inner,
+    .admin-welcome *,
+    .admin-welcome *::before,
+    .admin-welcome *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .admin-welcome-loader span {
+        transform: scaleX(1);
+    }
+}
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.theme-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--gp-ink);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+:root[data-theme='dark'] .theme-toggle-btn {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #edf5eb;
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+/* Clear, role-specific workspace header */
+.topbar-context {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.workspace-mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 116px;
+    height: 48px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #dcefe0;
+    color: #1b5b31;
+}
+
+.workspace-mode > .bi {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background: #b9dfc2;
+    font-size: 15px;
+}
+
+.workspace-mode > span,
+.topbar-current-page {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.workspace-mode small,
+.topbar-current-page small {
+    margin-bottom: 2px;
+    color: #718176;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.workspace-mode b,
+.topbar-current-page b {
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+.workspace-mode--counter-staff {
+    background: #dcefe0;
+    color: #166534;
+}
+
+.workspace-mode--inventory-staff {
+    background: #e3ecdd;
+    color: #2e6031;
+}
+
+.workspace-mode--admin {
+    background: #dcefe0;
+    color: #165b32;
+}
+
+.topbar-current-page {
+    max-width: 220px;
+}
+
+.topbar-current-page b {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--admin-text);
+}
+
+:root[data-theme='dark'] .workspace-mode {
+    background: #173b25;
+    color: #dff5e2;
+}
+
+:root[data-theme='dark'] .workspace-mode > .bi {
+    background: #245a35;
+    color: #c8efcf;
+}
+
+:root[data-theme='dark'] .workspace-mode small,
+:root[data-theme='dark'] .topbar-current-page small {
+    color: #9fb0a3;
+}
+
+@media (max-width: 1279px) {
+    .topbar-context {
+        flex: 1;
+    }
+}
+
+@media (max-width: 850px) {
+    .workspace-mode {
+        min-width: 48px;
+        width: 48px;
+        padding: 8px;
+        justify-content: center;
+    }
+
+    .workspace-mode > span,
+    .topbar-current-page small {
+        display: none;
+    }
+
+    .topbar-current-page {
+        max-width: 180px;
+    }
+}
+
+@media (max-width: 560px) {
+    .topbar-current-page {
+        max-width: 130px;
+    }
+
+    .topbar-context {
+        gap: 8px;
+    }
+}
+
+/* ---------------------------------------------------------------
+   Catalogue / inventory tables (202-product import)
+   --------------------------------------------------------------- */
+
+.products-toolbar {
+    flex-wrap: wrap;
+}
+
+.products-toolbar .admin-search {
+    max-width: 360px;
+}
+
+.product-thumb {
+    width: 39px;
+    height: 39px;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+    padding: 4px;
+    flex: none;
+    overflow: hidden;
+    background: #e9f3e8;
+}
+
+.product-thumb > svg {
+    width: 100%;
+    height: 100%;
+}
+
+.product-thumb.is-photo {
+    object-fit: cover;
+    padding: 0;
+}
+
+.cell-sub {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    color: #98a39a;
+    font-weight: 400;
+}
+
+.stock-chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.stock-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    border-radius: 20px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #2d6a3e;
+    background: #e8f6e6;
+    white-space: nowrap;
+}
+
+.price-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.price-list > span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    white-space: nowrap;
+}
+
+.price-list b {
+    color: #2f5338;
+}
+
+.price-list small {
+    font-size: 10px;
+    color: #8d9a90;
+}
+
+.unit-warning {
+    margin-left: 4px;
+    color: #c08a10;
+    font-size: 12px;
+}
+
+.status-badge.awaiting-opening-stock {
+    background: #eef1f6;
+    color: #5c6f86;
+}
+
+.table-pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 20px;
+    border-top: 1px solid #d8ead9;
+    color: #7c8a80;
+    font-size: 11px;
+    flex-wrap: wrap;
+}
+
+.table-pager-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-pager-buttons b {
+    font-size: 11px;
+    color: #3c5541;
+    font-weight: 700;
+}
+
+.table-pager .admin-soft {
+    height: 36px;
+    padding: 0 12px;
+    font-size: 11px;
+}
+
+.table-pager .admin-soft:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Import summary dialog */
+.import-summary {
+    text-align: left;
+    color: #405643;
+    font-size: 12px;
+}
+
+.import-source {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    color: #2d6a3e;
+    font-weight: 700;
+}
+
+.import-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+    margin-bottom: 15px;
+}
+
+.import-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border: 1px solid #dcead9;
+    border-radius: 8px;
+    background: #f6fbf5;
+}
+
+.import-grid span {
+    font-size: 10px;
+    color: #829087;
+}
+
+.import-grid b {
+    font-size: 17px;
+    color: #27442e;
+}
+
+.import-note {
+    margin: 10px 0 6px;
+    font-size: 11px;
+    color: #617166;
+    line-height: 1.5;
+}
+
+.import-list {
+    margin: 0 0 12px;
+    padding-left: 18px;
+    font-size: 11px;
+    color: #5e6e62;
+    line-height: 1.6;
+}
+
+.import-list b {
+    color: #2f5338;
+}
+
+/* POS variant picker */
+.cpos-variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 2px;
+}
+
+.cpos-variant {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    border: 1px solid var(--admin-border, #dce7dc);
+    border-radius: 8px;
+    background: var(--admin-surface, #fff);
+    color: var(--admin-text, #354e3a);
+    padding: 5px 8px;
+    font-size: 10px;
+    line-height: 1.25;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.cpos-variant span {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--admin-muted, #718077);
+    font-size: 9px;
+}
+
+.cpos-variant b {
+    font-size: 11px;
+    color: var(--admin-green, #1d723c);
+}
+
+.cpos-variant small {
+    font-size: 9px;
+    color: var(--admin-muted, #8c988e);
+}
+
+.cpos-variant.is-on {
+    border-color: var(--admin-green, #1d723c);
+    background: var(--admin-light, #eaf6eb);
+    box-shadow: 0 0 0 1px var(--admin-green, #1d723c) inset;
+}
+
+.cpos-variant.is-unverified {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.cpos-variant:disabled {
+    cursor: not-allowed;
+}
+
+.cpos-card-unit {
+    font-size: 11px;
+    color: var(--admin-muted, #718077);
+    margin-top: 2px;
+}
+
+/* Dark theme adjustments */
+:root[data-theme='dark'] .product-thumb {
+    background: #1d3b29;
+}
+
+:root[data-theme='dark'] .cell-sub,
+:root[data-theme='dark'] .price-list small {
+    color: #93a596;
+}
+
+:root[data-theme='dark'] .stock-chip {
+    background: #1d3b29;
+    color: #8fe0a0;
+}
+
+:root[data-theme='dark'] .status-badge.awaiting-opening-stock {
+    background: #1b2c3f;
+    color: #9cc3f5;
+}
+
+:root[data-theme='dark'] .table-pager {
+    border-top-color: #2d4a37;
+    color: #93a596;
+}
+
+:root[data-theme='dark'] .table-pager-buttons b {
+    color: #cfe3d2;
+}
+
+:root[data-theme='dark'] .import-grid > div {
+    background: #10281a;
+    border-color: #2d4a37;
+}
+
+:root[data-theme='dark'] .import-grid b,
+:root[data-theme='dark'] .import-list b {
+    color: #cfe3d2;
+}
+
+:root[data-theme='dark'] .import-summary,
+:root[data-theme='dark'] .import-note,
+:root[data-theme='dark'] .import-list {
+    color: #b9c9bc;
+}
+
+@media (max-width: 640px) {
+    .import-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .table-pager {
+        justify-content: center;
+    }
+}
+
+/* ---------------------------------------------------------------
+   Catalogue page: page-head actions + filter bar + product table
+   --------------------------------------------------------------- */
+
+/* Text buttons in a page header must not inherit the square icon-button
+   sizing used by .table-actions. */
+.page-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.page-actions .admin-primary,
+.page-actions .admin-soft {
+    white-space: nowrap;
+}
+
+.catalog-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.catalog-toolbar-top {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.catalog-search-field {
+    flex: 1 1 320px;
+}
+
+.catalog-search {
+    max-width: none;
+    width: 100%;
+    height: 44px;
+}
+
+.catalog-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #8c988e;
+    min-width: 0;
+}
+
+.catalog-field .admin-select {
+    width: 100%;
+    min-width: 165px;
+    height: 44px;
+}
+
+.catalog-sort {
+    flex: 0 0 205px;
+}
+
+.catalog-category {
+    flex: 0 0 200px;
+}
+
+.catalog-clear {
+    height: 44px;
+    white-space: nowrap;
+}
+
+.catalog-clear.is-on {
+    background: #e8f6e6;
+    border-color: #cce7c9;
+    color: #287641;
+}
+
+.catalog-clear:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.catalog-panel-head {
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
+
+.catalog-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #8c988e;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.catalog-legend .unit-warning {
+    margin: 0;
+    font-size: 11px;
+}
+
+.category-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.category-cell b {
+    font-size: 11px;
+    color: #354e3a;
+}
+
+.category-cell small {
+    font-size: 10px;
+    color: #98a39a;
+}
+
+.price-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    line-height: 1.25;
+}
+
+.price-line {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.price-cell b {
+    font-size: 12px;
+    color: #2f5338;
+    white-space: nowrap;
+}
+
+.price-cell small {
+    font-size: 10px;
+    color: #8d9a90;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.price-cell .unit-warning {
+    margin: 0;
+    font-size: 10px;
+}
+
+.product-table .actions-col {
+    text-align: right;
+}
+
+.product-table td:last-child .table-actions {
+    justify-content: flex-end;
+}
+
+/* Dark theme */
+:root[data-theme='dark'] .catalog-field,
+:root[data-theme='dark'] .catalog-legend {
+    color: #93a596;
+}
+
+:root[data-theme='dark'] .catalog-clear.is-on {
+    background: #1d3b29;
+    border-color: #2f5a3c;
+    color: #8fe0a0;
+}
+
+:root[data-theme='dark'] .category-cell b {
+    color: #cfe3d2;
+}
+
+:root[data-theme='dark'] .category-cell small,
+:root[data-theme='dark'] .price-cell small {
+    color: #93a596;
+}
+
+:root[data-theme='dark'] .price-cell b {
+    color: #cfe3d2;
+}
+
+@media (max-width: 1100px) {
+    .catalog-toolbar-top {
+        row-gap: 12px;
+    }
+}
+
+@media (max-width: 640px) {
+    .catalog-toolbar-top {
+        align-items: stretch;
+    }
+
+    .catalog-search-field,
+    .catalog-category,
+    .catalog-sort {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .catalog-clear {
+        flex: 1 1 auto;
+    }
+
+    .catalog-field .admin-select {
+        max-width: none;
+        min-width: 0;
+    }
+
+    .catalog-panel-head {
+        align-items: flex-start;
+    }
+
+    .page-actions {
+        justify-content: flex-start;
+        width: 100%;
+    }
+}
+
+/* ---------------------------------------------------------------
+   POS current-order panel: clearer header, totals, payment
+   --------------------------------------------------------------- */
+
+.cpos-order .panel-heading {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 12px;
+    padding: 20px;
+}
+
+.cpos-order .panel-heading > div:first-child {
+    flex: 1 1 100%;
+    min-width: 0;
+}
+
+.cpos-order-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.cpos-order-actions .admin-soft {
+    width: 100%;
+    height: 38px;
+    padding: 0 8px;
+    justify-content: center;
+    gap: 7px;
+    font-size: 12px;
+    border-radius: 9px;
+    white-space: nowrap;
+}
+
+.cpos-order-actions .admin-soft i {
+    font-size: 14px;
+}
+
+.cpos-order .cpos-empty {
+    padding: 26px 12px;
+}
+
+.cpos-lines {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.cpos-pay {
+    overflow-x: hidden;
+    gap: 12px;
+}
+
+/* Order summary card: subtotal, editable discount, total */
+.cpos-summary {
+    display: flex;
+    flex-direction: column;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    padding: 2px 14px;
+}
+
+.cpos-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    font-size: 13.5px;
+    color: var(--admin-body);
+}
+
+.cpos-summary-row + .cpos-summary-row {
+    border-top: 1px solid var(--admin-border);
+}
+
+.cpos-summary-row > span:first-child {
+    font-weight: 600;
+}
+
+.cpos-summary-row > b {
+    font-size: 14.5px;
+    color: var(--admin-text);
+    white-space: nowrap;
+}
+
+.cpos-summary-total > span:first-child {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--admin-text);
+}
+
+.cpos-summary-total > b {
+    font: 600 27px 'Fraunces', serif;
+    color: #1d723c;
+}
+
+.cpos-inline-money {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cpos-inline-money > i {
+    font-size: 13px;
+    color: var(--admin-muted);
+}
+
+.cpos-inline-money .admin-input {
+    width: 108px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0 10px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
+/* Payment section label */
+.cpos-pay-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.cpos-block-title {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--admin-muted);
+}
+
+/* Quick cash chips: distinct from the payment-method buttons */
+.cpos-quick-cash {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.cpos-quick-cash button {
+    height: 40px;
+    border: 1px solid var(--admin-border);
+    border-radius: 9px;
+    background: var(--admin-surface);
+    color: var(--admin-body);
+    font-size: 12px;
+    font-weight: 700;
+    transition: border-color .15s, background .15s, color .15s;
+}
+
+.cpos-quick-cash button:hover {
+    border-color: var(--admin-green);
+    color: var(--admin-green);
+}
+
+.cpos-quick-cash button.is-on {
+    background: var(--admin-light);
+    border-color: var(--admin-green);
+    color: var(--admin-green);
+}
+
+:root[data-theme='dark'] .cpos-summary-total > b {
+    color: #75d68b;
+}
+
+:root[data-theme='dark'] .cpos-quick-cash button.is-on {
+    background: #1d3b29;
+    border-color: #2f5a3c;
+    color: #8fe0a0;
+}
+
+@media (max-width: 560px) {
+    .cpos-order .panel-heading {
+        padding: 16px;
+    }
+
+    .cpos-order-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .cpos-quick-cash {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Compact empty-cart strip */
+.cpos-order .cpos-empty-inline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 14px 4px;
+    text-align: left;
+    border-bottom: 1px dashed var(--admin-border);
+}
+
+.cpos-order .cpos-empty-inline i {
+    font-size: 20px;
+    color: var(--admin-muted);
+}
+
+.cpos-order .cpos-empty-inline span {
+    font-size: 12.5px;
+    color: var(--admin-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.cpos-order .cpos-empty-inline b {
+    font: 700 12.5px 'DM Sans', sans-serif;
+    color: var(--admin-text);
+}
+
+/* Compact payment area so Complete Sale stays reachable */
+.cpos-pay {
+    padding: 14px 18px 16px;
+    gap: 10px;
+}
+
+.cpos-summary {
+    padding: 0 12px;
+}
+
+.cpos-summary-row {
+    padding: 8px 0;
+    font-size: 13px;
+}
+
+.cpos-summary-total > b {
+    font-size: 24px;
+}
+
+.cpos-methods button {
+    height: 54px;
+}
+
+.cpos-methods button i {
+    font-size: 19px;
+}
+
+.cpos-pay .admin-input {
+    height: 48px;
+}
+
+.cpos-pay .pos-change-row {
+    padding: 10px 12px;
+}
+
+.cpos-pay .pos-change-row b {
+    font-size: 19px;
+}
+
+.cpos-pay .pos-complete {
+    height: 56px;
+    font-size: 15.5px;
+}
+
+/* Final spacing pass: keep the checkout button fully visible */
+.cpos-pay {
+    gap: 8px;
+}
+
+.cpos-summary-row {
+    padding: 7px 0;
+}
+
+.cpos-order .cpos-empty-inline {
+    padding: 12px 4px;
+}
+
+.cpos-pay .pos-complete {
+    height: 54px;
+}
+/* Splash → login hand-off. The intro logo and the card logo share the
+   `guinhawa-intro-logo` view-transition-name, so the browser morphs the big
+   splash mark down into the small brand mark on the card. */
+::view-transition-group(guinhawa-intro-logo) {
+    animation-duration: .9s;
+    animation-timing-function: cubic-bezier(.2, .78, .22, 1);
+    z-index: 10000;
+}
+
+::view-transition-image-pair(guinhawa-intro-logo) {
+    isolation: isolate;
+}
+
+::view-transition-old(guinhawa-intro-logo),
+::view-transition-new(guinhawa-intro-logo) {
+    animation-duration: .9s;
+    animation-timing-function: cubic-bezier(.2, .78, .22, 1);
+}
+
+/* Both snapshots are the same logo, so a symmetric cross-fade just produces a
+   ghosted double image. Keep the outgoing (big) logo solid for the whole morph
+   and let the resizing box carry the motion; the incoming snapshot only fades
+   in at the very end, where it is already sitting at the card's size. */
+::view-transition-old(guinhawa-intro-logo) {
+    animation: none;
+    opacity: 1;
+}
+
+::view-transition-new(guinhawa-intro-logo) {
+    animation: gp-logo-settle .9s cubic-bezier(.2, .78, .22, 1) both;
+}
+
+/* The incoming snapshot only takes over in the last fifth of the morph, once
+   the box is already near its final size, so it never shows up blurry. */
+@keyframes gp-logo-settle {
+    0%, 80% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Soft cross-fade between the two screens. The splash drifts up a touch while
+   the sign-in card settles in, so the hand-off never reads as a hard cut.
+   Both snapshots start at 1.008+ scale so they always cover the viewport. */
+::view-transition-old(root) {
+    animation: gp-splash-out .62s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+::view-transition-new(root) {
+    animation: gp-screen-in .62s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+@keyframes gp-splash-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(1.025); }
+}
+
+@keyframes gp-screen-in {
+    from { opacity: 0; transform: scale(1.008); }
+    to { opacity: 1; transform: none; }
+}
+
+/* While the morph runs, the card must already be in its final, fully visible
+   state - otherwise it is snapshotted mid-rise (opacity 0) and pops in late. */
+.vt-logo-morph .gp-flip,
+.vt-logo-morph .gp-login-brand img {
+    animation: none;
+}
+
+/* Signing out: cross-fade the workspace into the sign-in card. The `vt-logout`
+   class suppresses the card's entrance animations while the new snapshot is
+   captured, and App removes it again on the next sign-in. */
+:root.vt-logout .gp-flip,
+:root.vt-logout .gp-card,
+:root.vt-logout .gp-login-brand img {
+    animation: none;
+}
+
+/* Keep the brand mark inside the root snapshot for this transition; it has no
+   matching element in the workspace to morph from. */
+:root.vt-logout .gp-card-face-front .gp-login-brand img {
+    view-transition-name: none;
+}
+
+:root.vt-logout::view-transition-old(root) {
+    animation: gp-logout-out .42s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+:root.vt-logout::view-transition-new(root) {
+    animation: gp-logout-in .52s cubic-bezier(.22, .68, .16, 1) both;
+}
+
+@keyframes gp-logout-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(.985); }
+}
+
+@keyframes gp-logout-in {
+    from { opacity: 0; transform: scale(1.012); }
+    to { opacity: 1; transform: none; }
+}

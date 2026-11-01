@@ -1,0 +1,10 @@
+Options -Indexes
+
+# Only image files may be served; PHP and other executables are refused.
+<FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh|asp|aspx|js|html?)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>

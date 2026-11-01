@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5fd68a" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#2f9152" stop-opacity=".18"/>
+    </linearGradient>
+    <linearGradient id="leafEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9af0b8" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#5fd68a" stop-opacity=".1"/>
+    </linearGradient>
+    <linearGradient id="vine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8fe8ae" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#3aa864" stop-opacity=".12"/>
+    </linearGradient>
+    <radialGradient id="roosterGlow" cx=".5" cy=".45" r=".55">
+      <stop offset="0" stop-color="#2f8f55" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#0a3a1d" stop-opacity="0"/>
+    </radialGradient>
+
+    <g id="leafShape">
+      <path d="M0 0 C 26 -46 78 -70 118 -66 C 112 -22 74 16 22 28 C 10 30 2 20 0 0 Z" fill="url(#leaf)"/>
+      <path d="M4 2 C 34 -22 72 -46 108 -56" fill="none" stroke="url(#leafEdge)" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M22 14 C 40 -6 62 -24 84 -34" fill="none" stroke="url(#leafEdge)" stroke-width="1.4" opacity=".55"/>
+    </g>
+
+    <g id="smallLeaf">
+      <path d="M0 0 C 14 -26 44 -40 66 -38 C 62 -12 40 10 12 16 C 6 17 1 11 0 0 Z" fill="url(#leaf)" opacity=".85"/>
+      <path d="M2 1 C 18 -12 40 -26 60 -32" fill="none" stroke="url(#leafEdge)" stroke-width="1.6" stroke-linecap="round"/>
+    </g>
+
+    <!-- Stylized rooster silhouette watermark -->
+    <g id="rooster">
+      <path d="M210 90
+               C 246 78 288 88 312 118
+               C 330 96 336 78 332 62
+               C 348 74 360 96 356 122
+               C 372 132 386 152 388 178
+               C 402 172 418 176 428 190
+               C 418 196 408 206 404 220
+               C 430 236 448 262 452 296
+               C 470 308 482 330 484 356
+               C 470 348 454 348 440 356
+               C 448 396 438 440 408 474
+               C 388 496 362 512 332 520
+               C 348 528 360 542 364 560
+               C 344 556 326 560 310 572
+               C 302 590 286 602 264 606
+               C 274 586 274 566 262 548
+               C 236 556 208 552 184 536
+               C 168 524 158 508 154 490
+               C 128 500 100 496 78 478
+               C 96 474 110 462 118 446
+               C 88 440 66 418 60 390
+               C 84 398 106 396 124 382
+               C 104 356 98 322 110 290
+               C 130 306 154 312 178 306
+               C 168 272 174 236 196 208
+               C 208 190 224 176 242 168
+               C 230 148 216 124 210 90 Z" fill="url(#roosterGlow)" opacity=".9"/>
+      <path d="M242 168 C 258 158 278 156 296 164 C 304 148 306 130 300 114
+               C 320 128 334 152 332 180 C 348 196 356 220 352 246
+               C 368 262 376 286 372 312 C 386 330 392 354 386 378
+               C 370 366 352 364 334 372 C 340 410 328 448 302 476
+               C 278 500 246 514 212 516 C 190 496 180 466 186 436
+               C 162 440 138 430 122 410 C 146 408 166 396 176 376
+               C 156 348 152 312 166 280 C 186 292 210 292 230 280
+               C 222 244 228 206 248 176 Z" fill="none" stroke="#7fe0a0" stroke-opacity=".28" stroke-width="3"/>
+      <!-- comb + beak accents -->
+      <path d="M300 114 C 306 96 320 84 338 82 C 330 96 330 112 338 124" fill="none" stroke="#8fe8ae" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+      <path d="M352 176 L 392 188 L 352 200" fill="none" stroke="#8fe8ae" stroke-opacity=".35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="322" cy="168" r="7" fill="#9af0b8" fill-opacity=".4"/>
+      <!-- tail feathers -->
+      <path d="M186 300 C 150 260 118 210 108 156" fill="none" stroke="#7fe0a0" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/>
+      <path d="M166 280 C 118 250 80 200 66 140" fill="none" stroke="#7fe0a0" stroke-opacity=".22" stroke-width="4" stroke-linecap="round"/>
+      <path d="M148 310 C 96 290 54 244 36 186" fill="none" stroke="#7fe0a0" stroke-opacity=".16" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <!-- Large rooster watermark sitting behind the login card -->
+  <g transform="translate(1060 150) scale(1.15)">
+    <use href="#rooster"/>
+  </g>
+
+  <!-- Top-right leaf cluster -->
+  <g transform="translate(1560 -30)">
+    <use href="#leafShape" transform="rotate(38) scale(1.6)"/>
+    <use href="#leafShape" transform="translate(140 40) rotate(72) scale(1.35)"/>
+    <use href="#smallLeaf" transform="translate(260 10) rotate(108) scale(1.5)"/>
+    <use href="#smallLeaf" transform="translate(60 130) rotate(128) scale(1.2)"/>
+    <path d="M340 -20 C 240 60 160 140 120 260" fill="none" stroke="url(#vine)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M400 10 C 320 90 260 180 230 300" fill="none" stroke="url(#vine)" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
+  </g>
+
+  <!-- Bottom-right leaf cluster -->
+  <g transform="translate(1470 900)">
+    <use href="#leafShape" transform="rotate(-28) scale(1.7)"/>
+    <use href="#leafShape" transform="translate(180 -20) rotate(12) scale(1.5)"/>
+    <use href="#smallLeaf" transform="translate(320 60) rotate(-10) scale(1.6)"/>
+    <use href="#smallLeaf" transform="translate(90 -90) rotate(-52) scale(1.3)"/>
+    <path d="M420 120 C 320 40 240 -20 160 -60" fill="none" stroke="url(#vine)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M480 60 C 380 -10 300 -60 210 -90" fill="none" stroke="url(#vine)" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
+  </g>
+
+  <!-- Small trailing leaves mid-right edge -->
+  <g transform="translate(1820 470)">
+    <use href="#smallLeaf" transform="rotate(160) scale(1.1)" opacity=".7"/>
+    <use href="#smallLeaf" transform="translate(-20 90) rotate(200) scale(.9)" opacity=".55"/>
+  </g>
+</svg>

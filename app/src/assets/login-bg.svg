@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#041a0e"/>
+      <stop offset=".45" stop-color="#0a3119"/>
+      <stop offset=".78" stop-color="#0f4a26"/>
+      <stop offset="1" stop-color="#146335"/>
+    </linearGradient>
+
+    <linearGradient id="rightDark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset=".45" stop-color="#02100a" stop-opacity="0"/>
+      <stop offset="1" stop-color="#02100a" stop-opacity=".55"/>
+    </linearGradient>
+
+    <radialGradient id="softLight" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#d7ffe6" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#d7ffe6" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="farmGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#42e07e" stop-opacity=".55"/>
+      <stop offset=".55" stop-color="#2fbf67" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#2fbf67" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="windowGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffd98a" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="whiteBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf9f2"/>
+      <stop offset="1" stop-color="#dcd6c6"/>
+    </linearGradient>
+
+    <linearGradient id="brownBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c47f38"/>
+      <stop offset="1" stop-color="#8a4f1d"/>
+    </linearGradient>
+
+    <linearGradient id="houseBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e4526"/>
+      <stop offset="1" stop-color="#08301a"/>
+    </linearGradient>
+
+    <path id="leaf" d="M0 0 C 18 -20, 52 -28, 74 -20 C 54 6, 18 14, 0 0 Z"/>
+
+    <g id="leaf-spray">
+      <path d="M0 0 C 70 -6, 140 -34, 196 -96" fill="none" stroke="#2a8f53" stroke-width="7" stroke-linecap="round"/>
+      <use href="#leaf" transform="translate(28 -6) rotate(-18) scale(1.05)" fill="#2f9c58"/>
+      <use href="#leaf" transform="translate(52 8) rotate(52) scale(.9)" fill="#237a47"/>
+      <use href="#leaf" transform="translate(84 -16) rotate(-34) scale(1.15)" fill="#37ad63"/>
+      <use href="#leaf" transform="translate(110 -2) rotate(38) scale(.95)" fill="#2a8f53"/>
+      <use href="#leaf" transform="translate(140 -40) rotate(-52) scale(1.1)" fill="#2f9c58"/>
+      <use href="#leaf" transform="translate(160 -24) rotate(16) scale(.85)" fill="#237a47"/>
+      <use href="#leaf" transform="translate(186 -76) rotate(-66) scale(1)" fill="#37ad63"/>
+    </g>
+
+    <g id="hen-white">
+      <path d="M20 44 C 4 40 -2 22 6 6 C 8 24 16 32 28 35 Z" fill="#e6e0d1"/>
+      <path d="M25 47 C 11 47 2 35 4 22 C 9 35 17 41 31 41 Z" fill="#f4f1e7"/>
+      <ellipse cx="48" cy="54" rx="30" ry="21" fill="url(#whiteBody)"/>
+      <path d="M38 48 C 46 42 60 44 66 54 C 58 62 44 60 38 52 Z" fill="#ded8c9"/>
+      <path d="M62 52 C 63 37 70 26 78 26 C 87 26 91 35 86 43 C 81 51 72 57 64 57 Z" fill="url(#whiteBody)"/>
+      <circle cx="80" cy="30" r="10" fill="url(#whiteBody)"/>
+      <path d="M72 22 C 72 13 78 11 80 18 C 83 9 89 12 87 21 C 92 17 96 21 92 26 Z" fill="#d64545"/>
+      <path d="M89 30 L 101 33 L 89 37 Z" fill="#f0a52f"/>
+      <path d="M85 37 C 92 38 92 47 85 48 C 82 45 82 40 85 37 Z" fill="#d64545"/>
+      <circle cx="83" cy="28" r="2.2" fill="#17251c"/>
+      <g stroke="#e8a33c" stroke-width="3.2" stroke-linecap="round" fill="none">
+        <path d="M42 74 L 42 86 M42 86 L 35 92 M42 86 L 49 92"/>
+        <path d="M57 74 L 57 86 M57 86 L 50 92 M57 86 L 64 92"/>
+      </g>
+    </g>
+
+    <g id="hen-brown">
+      <path d="M20 44 C 4 40 -2 22 6 6 C 8 24 16 32 28 35 Z" fill="#7c4419"/>
+      <path d="M25 47 C 11 47 2 35 4 22 C 9 35 17 41 31 41 Z" fill="#9a5b24"/>
+      <ellipse cx="48" cy="54" rx="30" ry="21" fill="url(#brownBody)"/>
+      <path d="M38 48 C 46 42 60 44 66 54 C 58 62 44 60 38 52 Z" fill="#7c4419"/>
+      <path d="M62 52 C 63 37 70 26 78 26 C 87 26 91 35 86 43 C 81 51 72 57 64 57 Z" fill="url(#brownBody)"/>
+      <circle cx="80" cy="30" r="10" fill="url(#brownBody)"/>
+      <path d="M72 22 C 72 13 78 11 80 18 C 83 9 89 12 87 21 C 92 17 96 21 92 26 Z" fill="#c93b34"/>
+      <path d="M89 30 L 101 33 L 89 37 Z" fill="#f0a52f"/>
+      <path d="M85 37 C 92 38 92 47 85 48 C 82 45 82 40 85 37 Z" fill="#c93b34"/>
+      <circle cx="83" cy="28" r="2.2" fill="#17251c"/>
+      <g stroke="#e8a33c" stroke-width="3.2" stroke-linecap="round" fill="none">
+        <path d="M42 74 L 42 86 M42 86 L 35 92 M42 86 L 49 92"/>
+        <path d="M57 74 L 57 86 M57 86 L 50 92 M57 86 L 64 92"/>
+      </g>
+    </g>
+
+    <g id="rooster-sil">
+      <path d="M330 430 C 430 330, 520 300, 580 205 C 562 340, 470 420, 360 480 Z"/>
+      <path d="M342 470 C 450 420, 540 442, 585 358 C 570 492, 470 542, 365 532 Z"/>
+      <path d="M348 522 C 442 532, 505 592, 505 682 C 460 592, 402 556, 352 566 Z"/>
+      <path d="M332 562 C 402 592, 436 660, 416 732 C 406 652, 366 606, 336 602 Z"/>
+      <ellipse cx="272" cy="472" rx="152" ry="132" transform="rotate(-12 272 472)"/>
+      <path d="M168 448 C 118 498, 120 582, 166 628 C 214 652, 254 598, 240 504 Z"/>
+      <path d="M170 445 C 142 375, 148 302, 178 264 C 214 226, 264 252, 250 316 C 240 366, 234 412, 250 458 Z"/>
+      <circle cx="184" cy="240" r="56"/>
+      <path d="M136 214 C 126 174, 160 162, 170 196 C 180 156, 216 164, 211 204 C 230 180, 258 200, 244 232 C 214 256, 162 254, 136 214 Z"/>
+      <path d="M130 238 L 58 256 L 132 278 Z"/>
+      <path d="M142 276 C 156 288, 152 330, 128 334 C 114 310, 120 284, 142 276 Z"/>
+      <circle cx="172" cy="232" r="11" fill="#0a3520"/>
+      <path d="M232 595 L 224 692 M224 692 L 190 732 M224 692 L 258 732 M305 590 L 322 685 M322 685 L 288 725 M322 685 L 358 722"
+            stroke="#04180d" stroke-width="20" stroke-linecap="round" fill="none"/>
+    </g>
+  </defs>
+
+  <!-- base -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <ellipse cx="420" cy="120" rx="900" ry="520" fill="url(#softLight)"/>
+  <rect width="1920" height="1080" fill="url(#rightDark)"/>
+
+  <!-- soft green glow behind the farm -->
+  <ellipse cx="300" cy="870" rx="520" ry="310" fill="url(#farmGlow)"/>
+
+  <!-- poultry farm, bottom-left -->
+  <g>
+    <path d="M0 955 C 180 930, 420 945, 640 985 C 780 1010, 860 1045, 900 1080 L 0 1080 Z" fill="#062a15"/>
+    <path d="M0 955 C 180 930, 420 945, 640 985 C 780 1010, 860 1045, 900 1080"
+          fill="none" stroke="#0f4a27" stroke-width="5" opacity=".7"/>
+
+    <path d="M105 745 L 285 645 L 465 745 Z" fill="#14532b"/>
+    <path d="M105 745 L 285 645 L 465 745" fill="none" stroke="#1d6b3a" stroke-width="6"/>
+    <rect x="140" y="745" width="290" height="205" rx="10" fill="url(#houseBody)"/>
+    <rect x="255" y="838" width="70" height="112" rx="6" fill="#051f10"/>
+    <path d="M255 844 a35 35 0 0 1 70 0 L 325 838 L 255 838 Z" fill="#051f10"/>
+    <ellipse cx="196" cy="811" rx="55" ry="55" fill="url(#windowGlow)"/>
+    <ellipse cx="374" cy="811" rx="55" ry="55" fill="url(#windowGlow)" opacity=".8"/>
+    <rect x="170" y="785" width="52" height="52" rx="6" fill="#f2c46a" opacity=".92"/>
+    <rect x="348" y="785" width="52" height="52" rx="6" fill="#f2c46a" opacity=".75"/>
+    <path d="M170 811 h52 M196 785 v52 M348 811 h52 M374 785 v52" stroke="#0a3b1f" stroke-width="4"/>
+    <rect x="140" y="938" width="290" height="14" fill="#062a15"/>
+
+    <g stroke="#0a3a1e" stroke-width="10" stroke-linecap="round" fill="none">
+      <path d="M505 858 V 968 M565 872 V 974 M625 886 V 982"/>
+    </g>
+    <path d="M490 895 H 640 M490 935 H 645" stroke="#0a3a1e" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+    <use href="#hen-white" transform="translate(60 847) scale(1.1)"/>
+    <use href="#hen-brown" transform="translate(380 845) scale(-1.05 1.05)"/>
+    <use href="#hen-white" transform="translate(455 876) scale(.8)"/>
+    <use href="#hen-brown" transform="translate(595 896) scale(-.75 .75)"/>
+    <use href="#hen-white" transform="translate(210 895) scale(.45)"/>
+
+    <g stroke="#0d4a27" stroke-width="5" stroke-linecap="round" fill="none" opacity=".8">
+      <path d="M70 950 L 64 928 M70 950 L 74 930 M70 950 L 82 936"/>
+      <path d="M470 962 L 464 940 M470 962 L 474 942 M470 962 L 482 948"/>
+      <path d="M660 995 L 654 973 M660 995 L 664 975 M660 995 L 672 981"/>
+    </g>
+  </g>
+
+  <!-- oversized rooster silhouette, right side -->
+  <g transform="translate(1075 140) scale(1.12)" fill="#04180d" opacity=".88">
+    <use href="#rooster-sil"/>
+  </g>
+
+  <!-- elegant leaves, right corners -->
+  <g opacity=".9">
+    <use href="#leaf-spray" transform="translate(1935 8) rotate(160) scale(1.55)"/>
+    <use href="#leaf-spray" transform="translate(1760 -15) rotate(130) scale(1.05)"/>
+    <use href="#leaf-spray" transform="translate(1940 1062) rotate(215) scale(1.65)"/>
+    <use href="#leaf-spray" transform="translate(1780 1095) rotate(240) scale(1.1)"/>
+  </g>
+
+  <!-- thin lime accent lines along the edges -->
+  <g fill="none" stroke="#a3e635" stroke-linecap="round">
+    <path d="M-10 300 C 130 210, 90 90, 300 -20" stroke-width="3" opacity=".55"/>
+    <path d="M-20 640 C 70 720, 40 850, -15 960" stroke-width="2.5" opacity=".45"/>
+    <path d="M60 1085 C 260 1005, 520 1035, 730 1090" stroke-width="3" opacity=".5"/>
+    <path d="M1450 1092 C 1640 1032, 1810 1052, 1938 1108" stroke-width="2" opacity=".35"/>
+    <path d="M1938 420 C 1858 470, 1878 570, 1938 610" stroke-width="2.5" opacity=".4"/>
+    <path d="M1180 -18 C 1330 62, 1520 42, 1660 -28" stroke-width="2" opacity=".32"/>
+  </g>
+</svg>
