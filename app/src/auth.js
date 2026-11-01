@@ -15,6 +15,7 @@ const listeners = new Set();
 
 let session = null;
 let resolved = false;
+let bootError = null;
 
 function notify() {
     listeners.forEach((listener) => listener());
@@ -29,8 +30,16 @@ export function getSession() {
     return session;
 }
 
+export function getBootError() {
+    return bootError;
+}
+
 export function useSession() {
     return useSyncExternalStore(subscribe, getSession, getSession);
+}
+
+export function useBootError() {
+    return useSyncExternalStore(subscribe, getBootError, getBootError);
 }
 
 /** False until the first `GET /auth/me` has answered (or failed). */
@@ -137,6 +146,7 @@ export function refreshSession() {
             if (error.status === 401 || error.status === 403) {
                 forget();
             } else {
+                bootError = error;
                 resolved = true;
                 notify();
             }

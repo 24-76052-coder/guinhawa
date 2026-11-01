@@ -7,7 +7,7 @@ import react from '@vitejs/plugin-react';
 // under `backend/api`, proxied to the local XAMPP Apache during development.
 export default defineConfig({
   root: 'app',
-  base: '/guinhawa/',
+  base: process.env.VITE_BASE_PATH || '/guinhawa/',
   plugins: [react()],
   publicDir: fileURLToPath(new URL('./public', import.meta.url)),
   server: {

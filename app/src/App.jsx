@@ -6,7 +6,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import ChangePasswordPage from './pages/ChangePasswordPage.jsx';
 import { IntroAnimation } from './components/IntroAnimation.jsx';
 import { CHANGE_PASSWORD_URL, LOGIN_URL, homeFor } from './roles.js';
-import { refreshSession, useSession, useSessionResolved } from './auth.js';
+import { refreshSession, useSession, useSessionResolved, useBootError } from './auth.js';
 import { useStoreReady } from './store.js';
 import { clearIntroSkip, shouldSkipIntro } from './intro.js';
 import { ThemeProvider } from './theme.jsx';
@@ -78,6 +78,7 @@ export default function App() {
     const navigate = useNavigate();
     const session = useSession();
     const sessionResolved = useSessionResolved();
+    const bootError = useBootError();
     const storeReady = useStoreReady();
     const [loginIntroVisible, setLoginIntroVisible] = useState(location.pathname === LOGIN_URL);
 
@@ -149,6 +150,17 @@ export default function App() {
     // painting a route. This avoids showing the sign-in card to a user whose
     // session is still valid.
     const waitingForData = session && !session.must_change_password && !storeReady;
+    if (bootError) {
+        return (
+            <ThemeProvider>
+                <div className="admin-loading">
+                    <span className="loading-mark"><img src={logoSrc} alt="Guinhawa Poultry Supply" /></span>
+                    <span style={{ color: 'red', fontWeight: 'bold' }}>{bootError.message}</span>
+                    <span className="loading-track"><i /></span>
+                </div>
+            </ThemeProvider>
+        );
+    }
     if (!sessionResolved || waitingForData) {
         return (
             <ThemeProvider>
