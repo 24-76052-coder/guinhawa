@@ -15,8 +15,21 @@ export class ApiError extends Error {
     }
 }
 
-const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
-const API_ROOT = `${base}/api`;
+const base = (import.meta.env.VITE_BASE_PATH || import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+// Local XAMPP keeps the same-origin `/guinhawa/api`. A separately hosted PHP
+// API is selected with VITE_API_URL (for example https://api.example.com/api),
+// so no production URL is invented here.
+const API_ROOT = (import.meta.env.VITE_API_URL || `${base}/api`).replace(/\/+$/, '');
+
+// Cross-origin APIs need `credentials: 'include'` for the PHP session cookie.
+// Same-origin deployments keep the stricter default, so XAMPP is unchanged.
+const API_IS_CROSS_ORIGIN = (() => {
+    try {
+        return new URL(API_ROOT, window.location.origin).origin !== window.location.origin;
+    } catch {
+        return false;
+    }
+})();
 
 let csrfToken = '';
 
@@ -42,7 +55,7 @@ export async function api(path, { method = 'GET', body } = {}) {
         response = await fetch(`${API_ROOT}${path}`, {
             method,
             headers,
-            credentials: 'same-origin',
+            credentials: API_IS_CROSS_ORIGIN ? 'include' : 'same-origin',
             body: body === undefined ? undefined : JSON.stringify(body),
         });
     } catch {
@@ -57,6 +70,20 @@ export async function api(path, { method = 'GET', body } = {}) {
         } catch {
             data = {};
         }
+    }
+
+    // A static host answering the API route with index.html (or any non-JSON
+    // page) means the PHP backend is not reachable at this address. Report that
+    // clearly instead of letting the caller fail on a missing field.
+    const contentType = response.headers.get('content-type') || '';
+    if (text && !contentType.includes('application/json')) {
+        throw new ApiError(
+            response.status === 404
+                ? `The PHP API was not found at ${API_ROOT}. Host the backend separately and set VITE_API_URL to its URL.`
+                : `The API at ${API_ROOT} did not return JSON. Make sure the PHP backend is hosted and VITE_API_URL points at it.`,
+            response.status,
+            'API_MISCONFIGURED',
+        );
     }
 
     if (!response.ok) {
