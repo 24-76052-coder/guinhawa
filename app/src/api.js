@@ -41,6 +41,30 @@ export function apiRoot() {
     return API_ROOT;
 }
 
+/**
+ * The PHP API returns `{ error: "message", code: "CODE" }`, but static hosts
+ * (for example Vercel) return `{ error: { code, message } }`. Pull a readable
+ * string out of either shape so the UI never renders `[object Object]`.
+ */
+function errorMessage(data, fallback) {
+    const error = data && typeof data === 'object' ? data.error : null;
+    if (typeof error === 'string' && error.trim()) {
+        return error;
+    }
+    if (error && typeof error === 'object') {
+        if (typeof error.message === 'string' && error.message.trim()) {
+            return error.message;
+        }
+        if (typeof error.code === 'string' && error.code.trim()) {
+            return error.code;
+        }
+    }
+    if (data && typeof data === 'object' && typeof data.message === 'string' && data.message.trim()) {
+        return data.message;
+    }
+    return fallback;
+}
+
 export async function api(path, { method = 'GET', body } = {}) {
     const headers = { Accept: 'application/json' };
     if (body !== undefined) {
@@ -87,10 +111,25 @@ export async function api(path, { method = 'GET', body } = {}) {
     }
 
     if (!response.ok) {
+        // A 404 whose `error` is an object is a static host (Vercel) saying
+        // "no such route", not the PHP API rejecting a request. PHP always
+        // returns `error` as a string.
+        const staticHost404 = response.status === 404
+            && data && typeof data === 'object'
+            && data.error && typeof data.error === 'object';
+
+        if (staticHost404) {
+            throw new ApiError(
+                `The PHP API was not found at ${API_ROOT}. Host the backend separately and set VITE_API_URL to its URL.`,
+                response.status,
+                'API_MISCONFIGURED',
+            );
+        }
+
         throw new ApiError(
-            data.error || `The server could not complete that request (${response.status}).`,
+            errorMessage(data, `The server could not complete that request (${response.status}).`),
             response.status,
-            data.code || 'REQUEST_FAILED',
+            (data && typeof data === 'object' && typeof data.code === 'string' && data.code) || 'REQUEST_FAILED',
         );
     }
 
