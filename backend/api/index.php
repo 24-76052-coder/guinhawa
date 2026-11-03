@@ -15,11 +15,15 @@ use Guinhawa\Controllers\SalesController;
 use Guinhawa\Controllers\SettingsController;
 use Guinhawa\Controllers\StateController;
 use Guinhawa\Controllers\StockController;
+use Guinhawa\Cors;
 use Guinhawa\Http;
 
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: no-referrer');
+
+// Same-origin XAMPP gets no CORS headers; split hosting opts into exact origins.
+Cors::apply($config['cors']['allowed_origins'] ?? []);
 
 try {
     $method = Http::method();

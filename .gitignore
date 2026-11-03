@@ -4,4 +4,6 @@ dist/
 .DS_Store
 .env
 .env.local
+.env.*.local
+backend/config/config.local.php
 

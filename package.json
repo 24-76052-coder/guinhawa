@@ -9,7 +9,8 @@
     "build": "vite build",
     "build:vercel": "vite build --mode vercel",
     "preview": "vite preview --port 5001 --host",
-    "sql:build": "node scripts/build-sql.mjs"
+    "sql:build": "node scripts/build-sql.mjs",
+    "sql:hosting": "node scripts/build-hosting-sql.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

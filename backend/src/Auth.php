@@ -21,13 +21,30 @@ final class Auth
         }
 
         session_name($config['name']);
+
+        // Split hosting (Vercel frontend + this API on another domain) needs
+        // SameSite=None + Secure. Same-origin XAMPP keeps the default Lax.
+        $sameSite = $config['same_site'] ?? 'Lax';
+        if (!in_array($sameSite, ['Lax', 'Strict', 'None'], true)) {
+            $sameSite = 'Lax';
+        }
+
+        $secureSetting = $config['secure'] ?? '';
+        $secure = $secureSetting === ''
+            ? (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            : filter_var($secureSetting, FILTER_VALIDATE_BOOL);
+        if ($sameSite === 'None') {
+            // Browsers reject SameSite=None cookies that are not Secure.
+            $secure = true;
+        }
+
         session_set_cookie_params([
             'lifetime' => $config['lifetime'],
             'path' => '/',
             'domain' => '',
-            'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+            'secure' => $secure,
             'httponly' => true,
-            'samesite' => 'Lax',
+            'samesite' => $sameSite,
         ]);
         session_start();
     }
